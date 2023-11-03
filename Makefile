@@ -40,9 +40,10 @@ TOPDIR := $(shell pwd)
 export TOPDIR
 
 # 被编译的当前目录下的文件
-obj-y += main.o
+obj-y += 
 
 # 被编译的子目录
+obj-y += project/
 obj-y += bsp/
 
 # 编译目标文件的名称
