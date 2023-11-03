@@ -32,7 +32,7 @@ CFLAGS += -fexec-charset=gbk
 CFLAGS += -I $(shell pwd)/include
 
 # 链接选项
-LDFLAGS :=
+LDFLAGS := -T./project/imx6ull.ld
 
 export CFLAGS LDFLAGS
 
@@ -40,9 +40,10 @@ TOPDIR := $(shell pwd)
 export TOPDIR
 
 # 被编译的当前目录下的文件
-obj-y += 
+obj-y +=
 
 # 被编译的子目录
+obj-y += imx6ull/
 obj-y += project/
 obj-y += bsp/
 

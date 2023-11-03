@@ -25,25 +25,24 @@
    POSSIBILITY OF SUCH DAMAGE.
    ---------------------------------------------------------------------------*/
 
-
-#if   defined ( __ICCARM__ )
- #pragma system_include         /* treat file as system include file for MISRA check */
+#if defined(__ICCARM__)
+	#pragma system_include /* treat file as system include file for MISRA check */
 #elif defined(__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
-  #pragma clang system_header   /* treat file as system include file */
+	#pragma clang system_header /* treat file as system include file */
 #endif
 
 #ifndef __CORE_CA_H
-#define __CORE_CA_H
+	#define __CORE_CA_H
 
-/*------------------ GNU Compiler ----------------------*/
-#if defined ( __GNUC__ )
-  #include "cortexa_gcc.h"
+	/*------------------ GNU Compiler ----------------------*/
+	#if defined(__GNUC__)
+		#include "cortexa_gcc.h"
 
-/*------------------ ICC Compiler ----------------------*/
-#elif defined ( __ICCARM__ )
-  #include "cortexa_iar.h"
+	/*------------------ ICC Compiler ----------------------*/
+	#elif defined(__ICCARM__)
+		#include "cortexa_iar.h"
 
-#endif
+	#endif
 
 /*@}*/ /* end of group CMSIS_Core_InstructionInterface */
 

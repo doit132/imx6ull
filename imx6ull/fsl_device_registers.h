@@ -29,26 +29,26 @@
  */
 
 #ifndef __FSL_DEVICE_REGISTERS_H__
-#define __FSL_DEVICE_REGISTERS_H__
+	#define __FSL_DEVICE_REGISTERS_H__
 
-/*
- * Include the cpu specific register header files.
- *
- * The CPU macro should be declared in the project or makefile.
- */
-#if (defined(CPU_MCIMX6Y2CVM05) || defined(CPU_MCIMX6Y2CVM08) || defined(CPU_MCIMX6Y2DVM05) || \
-    defined(CPU_MCIMX6Y2DVM09))
+	/*
+	 * Include the cpu specific register header files.
+	 *
+	 * The CPU macro should be declared in the project or makefile.
+	 */
+	#if (defined(CPU_MCIMX6Y2CVM05) || defined(CPU_MCIMX6Y2CVM08) || defined(CPU_MCIMX6Y2DVM05) ||                 \
+	     defined(CPU_MCIMX6Y2DVM09))
 
-#define MCIMX6Y2_SERIES
+		#define MCIMX6Y2_SERIES
 
-/* CMSIS-style register definitions */
-#include "MCIMX6Y2.h"
-/* CPU specific feature definitions */
-#include "MCIMX6Y2_features.h"
+		/* CMSIS-style register definitions */
+		#include "MCIMX6Y2.h"
+		/* CPU specific feature definitions */
+		#include "MCIMX6Y2_features.h"
 
-#else
-    #error "No valid CPU defined!"
-#endif
+	#else
+		#error "No valid CPU defined!"
+	#endif
 
 #endif /* __FSL_DEVICE_REGISTERS_H__ */
 

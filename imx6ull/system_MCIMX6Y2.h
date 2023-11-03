@@ -71,7 +71,7 @@
  */
 
 #ifndef _SYSTEM_MCIMX6Y2_H_
-#define _SYSTEM_MCIMX6Y2_H_                      /**< Symbol preventing repeated inclusion */
+#define _SYSTEM_MCIMX6Y2_H_ /**< Symbol preventing repeated inclusion */
 
 #ifdef __cplusplus
 extern "C" {
@@ -79,16 +79,15 @@ extern "C" {
 
 #include <stdint.h>
 
-#define DEFAULT_SYSTEM_CLOCK           528000000u            /* Default System clock value */
+#define DEFAULT_SYSTEM_CLOCK 528000000u /* Default System clock value */
 
-typedef void (*system_irq_handler_t) (uint32_t giccIar, void *param);
+typedef void (*system_irq_handler_t)(uint32_t giccIar, void *param);
 /**
  * @brief IRQ handle for specific IRQ
  */
-typedef struct _sys_irq_handle
-{
-    system_irq_handler_t irqHandler; /**< IRQ handler for specific IRQ */
-    void *userParam;                 /**< User param for handler callback */
+typedef struct _sys_irq_handle {
+	system_irq_handler_t irqHandler; /**< IRQ handler for specific IRQ */
+	void *userParam;		 /**< User param for handler callback */
 } sys_irq_handle_t;
 
 /**
@@ -109,7 +108,7 @@ extern uint32_t SystemCoreClock;
  * microcontroller device. For systems with variable clock speed it also updates
  * the variable SystemCoreClock. SystemInit is called from startup_device file.
  */
-void SystemInit (void);
+void SystemInit(void);
 
 /**
  * @brief Updates the SystemCoreClock variable.
@@ -118,12 +117,12 @@ void SystemInit (void);
  * execution. SystemCoreClockUpdate() evaluates the clock register settings and calculates
  * the current core clock.
  */
-void SystemCoreClockUpdate (void);
+void SystemCoreClockUpdate(void);
 
 /**
  * @brief Initialize IRQ table, set default handlers
  */
-void SystemInitIrqTable (void);
+void SystemInitIrqTable(void);
 
 /**
  * @brief Install IRQ handler for specific IRQ
@@ -134,7 +133,7 @@ void SystemInitIrqTable (void);
  * @param handler IRQ handler for the IRQ number
  * @param userParam User specified parameter for IRQ handler callback
  */
-void SystemInstallIrqHandler (IRQn_Type irq, system_irq_handler_t handler, void *userParam);
+void SystemInstallIrqHandler(IRQn_Type irq, system_irq_handler_t handler, void *userParam);
 
 /**
  * @brief System IRQ handler which dispatches specific IRQ to corresponding registered handler.
@@ -145,7 +144,7 @@ void SystemInstallIrqHandler (IRQn_Type irq, system_irq_handler_t handler, void 
  *
  * @param giccIar IRQ acknowledge value read from GICC_IAR
  */
-void SystemIrqHandler (uint32_t giccIar);
+void SystemIrqHandler(uint32_t giccIar);
 
 /**
  * @brief Get IRQ nesting level of current context.
@@ -154,23 +153,23 @@ void SystemIrqHandler (uint32_t giccIar);
  *
  * @return IRQ nesting level
  */
-uint32_t SystemGetIRQNestingLevel (void);
+uint32_t SystemGetIRQNestingLevel(void);
 
 /**
  * @brief Setup systick for RTOS system.
  *
- * @param tickRateHz Tick number per second 
+ * @param tickRateHz Tick number per second
  * @param tickHandler IRQ callback handler for tick
  * @param intPriority IRQ interrupt priority (the smaller, the higher priority)
  */
-void SystemSetupSystick (uint32_t tickRateHz, void *tickHandler, uint32_t intPriority);
+void SystemSetupSystick(uint32_t tickRateHz, void *tickHandler, uint32_t intPriority);
 
 /**
  * @brief Clear systick flag status so that next tick interrupt may occur.
  */
-void SystemClearSystickFlag (void);
+void SystemClearSystickFlag(void);
 #ifdef __cplusplus
 }
 #endif
 
-#endif  /* _SYSTEM_MCIMX6Y2_H_ */
+#endif /* _SYSTEM_MCIMX6Y2_H_ */

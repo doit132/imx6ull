@@ -70,7 +70,6 @@
 #ifndef DEPRECATED_DEFINITIONS_H
 #define DEPRECATED_DEFINITIONS_H
 
-
 /* Each FreeRTOS port has a unique portmacro.h header file.  Originally a
 pre-processor definition was used to ensure the pre-processor found the correct
 portmacro.h file for the port being used.  That scheme was deprecated in favour
@@ -82,12 +81,12 @@ projects should not use them. */
 
 #ifdef OPEN_WATCOM_INDUSTRIAL_PC_PORT
 	#include "..\..\Source\portable\owatcom\16bitdos\pc\portmacro.h"
-	typedef void ( __interrupt __far *pxISR )();
+typedef void(__interrupt __far *pxISR)();
 #endif
 
 #ifdef OPEN_WATCOM_FLASH_LITE_186_PORT
 	#include "..\..\Source\portable\owatcom\16bitdos\flsh186\portmacro.h"
-	typedef void ( __interrupt __far *pxISR )();
+typedef void(__interrupt __far *pxISR)();
 #endif
 
 #ifdef GCC_MEGA_AVR
@@ -227,7 +226,7 @@ projects should not use them. */
 #endif
 
 #ifdef GCC_MCF5235
-    #include "../../Source/portable/GCC/MCF5235/portmacro.h"
+	#include "../../Source/portable/GCC/MCF5235/portmacro.h"
 #endif
 
 #ifdef COLDFIRE_V2_GCC
@@ -255,7 +254,7 @@ projects should not use them. */
 	FreeRTOSConfig.h when using the Borland compiler. */
 	#include "frconfig.h"
 	#include "..\portable\BCC\16BitDOS\PC\prtmacro.h"
-    typedef void ( __interrupt __far *pxISR )();
+typedef void(__interrupt __far *pxISR)();
 #endif
 
 #ifdef BCC_FLASH_LITE_186_PORT
@@ -263,21 +262,21 @@ projects should not use them. */
 	FreeRTOSConfig.h when using the Borland compiler. */
 	#include "frconfig.h"
 	#include "..\portable\BCC\16BitDOS\flsh186\prtmacro.h"
-    typedef void ( __interrupt __far *pxISR )();
+typedef void(__interrupt __far *pxISR)();
 #endif
 
 #ifdef __GNUC__
-   #ifdef __AVR32_AVR32A__
-	   #include "portmacro.h"
-   #endif
+	#ifdef __AVR32_AVR32A__
+		#include "portmacro.h"
+	#endif
 #endif
 
 #ifdef __ICCAVR32__
-   #ifdef __CORE__
-      #if __CORE__ == __AVR32A__
-	      #include "portmacro.h"
-      #endif
-   #endif
+	#ifdef __CORE__
+		#if __CORE__ == __AVR32A__
+			#include "portmacro.h"
+		#endif
+	#endif
 #endif
 
 #ifdef __91467D
@@ -287,7 +286,6 @@ projects should not use them. */
 #ifdef __96340
 	#include "portmacro.h"
 #endif
-
 
 #ifdef __IAR_V850ES_Fx3__
 	#include "../../Source/portable/IAR/V850ES/portmacro.h"
@@ -318,4 +316,3 @@ projects should not use them. */
 #endif
 
 #endif /* DEPRECATED_DEFINITIONS_H */
-

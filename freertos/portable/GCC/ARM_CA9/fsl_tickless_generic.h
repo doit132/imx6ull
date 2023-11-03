@@ -77,8 +77,8 @@ extern "C" {
 #endif
 
 #ifndef configSYSTICK_CLOCK_HZ
-#define configSYSTICK_CLOCK_HZ CLOCK_GetFreq(kCLOCK_IpgClk)
-#define configEPIT_RATE_HZ CLOCK_GetFreq(kCLOCK_IpgClk)
+	#define configSYSTICK_CLOCK_HZ CLOCK_GetFreq(kCLOCK_IpgClk)
+	#define configEPIT_RATE_HZ CLOCK_GetFreq(kCLOCK_IpgClk)
 #endif
 /* Constants required to manipulate the core.  Registers first... */
 #define portGIC_SYSTICK_CTRL_REG (GPT1->CR)

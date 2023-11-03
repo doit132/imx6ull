@@ -35,51 +35,54 @@
 
 #define __STRINGIFY(x) #x
 
-#define __MCR(coproc, opcode_1, src, CRn, CRm, opcode_2)                          \
-    __ASM volatile ("MCR " __STRINGIFY(p##coproc) ", " __STRINGIFY(opcode_1) ", " \
-                    "%0, " __STRINGIFY(c##CRn) ", " __STRINGIFY(c##CRm) ", "      \
-                    __STRINGIFY(opcode_2)                                         \
-                    : : "r" (src) )
+#define __MCR(coproc, opcode_1, src, CRn, CRm, opcode_2)                                                               \
+	__ASM volatile(                                                                                                \
+		"MCR " __STRINGIFY(p##coproc) ", " __STRINGIFY(opcode_1) ", "                                          \
+									 "%0, " __STRINGIFY(c##CRn) ", " __STRINGIFY(  \
+										 c##CRm) ", " __STRINGIFY(opcode_2)    \
+		:                                                                                                      \
+		: "r"(src))
 
-#define __MRC(coproc, opcode_1, CRn, CRm, opcode_2)                               \
-  ({                                                                              \
-    uint32_t __dst;                                                               \
-    __ASM volatile ("MRC " __STRINGIFY(p##coproc) ", " __STRINGIFY(opcode_1) ", " \
-                    "%0, " __STRINGIFY(c##CRn) ", " __STRINGIFY(c##CRm) ", "      \
-                    __STRINGIFY(opcode_2)                                         \
-                    : "=r" (__dst) );                                             \
-    __dst;                                                                        \
-  })
+#define __MRC(coproc, opcode_1, CRn, CRm, opcode_2)                                                                    \
+	({                                                                                                             \
+		uint32_t __dst;                                                                                        \
+		__ASM volatile("MRC " __STRINGIFY(p##coproc) ", " __STRINGIFY(                                         \
+				       opcode_1) ", "                                                                  \
+						 "%0, " __STRINGIFY(c##CRn) ", " __STRINGIFY(c##CRm) ", " __STRINGIFY( \
+							 opcode_2)                                                     \
+			       : "=r"(__dst));                                                                         \
+		__dst;                                                                                                 \
+	})
 
-__attribute__( ( always_inline ) ) __STATIC_INLINE void __set_APSR(uint32_t apsr)
+__attribute__((always_inline)) __STATIC_INLINE void __set_APSR(uint32_t apsr)
 {
-  __ASM volatile ("MSR apsr, %0" : : "r" (apsr) : "cc");
+	__ASM volatile("MSR apsr, %0" : : "r"(apsr) : "cc");
 }
 
-__attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t __get_CPSR(void)
+__attribute__((always_inline)) __STATIC_INLINE uint32_t __get_CPSR(void)
 {
-  uint32_t result;
+	uint32_t result;
 
-  __ASM volatile ("MRS %0, cpsr" : "=r" (result) );
-  return(result);
+	__ASM volatile("MRS %0, cpsr" : "=r"(result));
+	return (result);
 }
 
-__attribute__( ( always_inline ) ) __STATIC_INLINE void __set_CPSR(uint32_t cpsr)
+__attribute__((always_inline)) __STATIC_INLINE void __set_CPSR(uint32_t cpsr)
 {
-  __ASM volatile ("MSR cpsr, %0" : : "r" (cpsr) : "cc");
+	__ASM volatile("MSR cpsr, %0" : : "r"(cpsr) : "cc");
 }
 
-__attribute__( ( always_inline ) ) __STATIC_INLINE uint32_t __get_FPEXC(void)
+__attribute__((always_inline)) __STATIC_INLINE uint32_t __get_FPEXC(void)
 {
-  uint32_t result;
+	uint32_t result;
 
-  __ASM volatile ("VMRS %0, fpexc" : "=r" (result) );
-  return result;
+	__ASM volatile("VMRS %0, fpexc" : "=r"(result));
+	return result;
 }
 
-__attribute__( ( always_inline ) ) __STATIC_INLINE void __set_FPEXC(uint32_t fpexc)
+__attribute__((always_inline)) __STATIC_INLINE void __set_FPEXC(uint32_t fpexc)
 {
-  __ASM volatile ("VMSR fpexc, %0" : : "r" (fpexc));
+	__ASM volatile("VMSR fpexc, %0" : : "r"(fpexc));
 }
 
 #endif /* __CORTEXA_GCC_H */
