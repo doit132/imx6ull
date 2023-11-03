@@ -133,8 +133,8 @@ static void prvHeapInit(void);
 
 /* The size of the structure placed at the beginning of each allocated memory
 block must by correctly byte aligned. */
-static const size_t xHeapStructSize =
-	(sizeof(BlockLink_t) + ((size_t)(portBYTE_ALIGNMENT - 1))) & ~((size_t)portBYTE_ALIGNMENT_MASK);
+static const size_t xHeapStructSize = (sizeof(BlockLink_t) + ((size_t)(portBYTE_ALIGNMENT - 1))) &
+				      ~((size_t)portBYTE_ALIGNMENT_MASK);
 
 /* Create a couple of list links to mark the start and end of the list. */
 static BlockLink_t xStart, *pxEnd = NULL;
@@ -181,7 +181,8 @@ void *pvPortMalloc(size_t xWantedSize)
 				of bytes. */
 				if ((xWantedSize & portBYTE_ALIGNMENT_MASK) != 0x00) {
 					/* Byte alignment required. */
-					xWantedSize += (portBYTE_ALIGNMENT - (xWantedSize & portBYTE_ALIGNMENT_MASK));
+					xWantedSize += (portBYTE_ALIGNMENT -
+							(xWantedSize & portBYTE_ALIGNMENT_MASK));
 					configASSERT((xWantedSize & portBYTE_ALIGNMENT_MASK) == 0);
 				} else {
 					mtCOVERAGE_TEST_MARKER();
@@ -195,7 +196,8 @@ void *pvPortMalloc(size_t xWantedSize)
 				one	of adequate size is found. */
 				pxPreviousBlock = &xStart;
 				pxBlock = xStart.pxNextFreeBlock;
-				while ((pxBlock->xBlockSize < xWantedSize) && (pxBlock->pxNextFreeBlock != NULL)) {
+				while ((pxBlock->xBlockSize < xWantedSize) &&
+				       (pxBlock->pxNextFreeBlock != NULL)) {
 					pxPreviousBlock = pxBlock;
 					pxBlock = pxBlock->pxNextFreeBlock;
 				}
@@ -205,7 +207,8 @@ void *pvPortMalloc(size_t xWantedSize)
 				if (pxBlock != pxEnd) {
 					/* Return the memory space pointed to - jumping over the
 					BlockLink_t structure at its start. */
-					pvReturn = (void *)(((uint8_t *)pxPreviousBlock->pxNextFreeBlock) +
+					pvReturn = (void *)(((uint8_t *)pxPreviousBlock
+								     ->pxNextFreeBlock) +
 							    xHeapStructSize);
 
 					/* This block is being returned for use so must be taken out
@@ -214,20 +217,25 @@ void *pvPortMalloc(size_t xWantedSize)
 
 					/* If the block is larger than required it can be split into
 					two. */
-					if ((pxBlock->xBlockSize - xWantedSize) > heapMINIMUM_BLOCK_SIZE) {
+					if ((pxBlock->xBlockSize - xWantedSize) >
+					    heapMINIMUM_BLOCK_SIZE) {
 						/* This block is to be split into two.  Create a new
-						block following the number of bytes requested. The void
-						cast is used to prevent byte alignment warnings from the
-						compiler. */
-						pxNewBlockLink = (void *)(((uint8_t *)pxBlock) + xWantedSize);
-						configASSERT((((size_t)pxNewBlockLink) & portBYTE_ALIGNMENT_MASK) == 0);
+						block following the number of bytes requested. The
+						void cast is used to prevent byte alignment warnings
+						from the compiler. */
+						pxNewBlockLink = (void *)(((uint8_t *)pxBlock) +
+									  xWantedSize);
+						configASSERT((((size_t)pxNewBlockLink) &
+							      portBYTE_ALIGNMENT_MASK) == 0);
 
 						/* Calculate the sizes of two blocks split from the
 						single block. */
-						pxNewBlockLink->xBlockSize = pxBlock->xBlockSize - xWantedSize;
+						pxNewBlockLink->xBlockSize =
+							pxBlock->xBlockSize - xWantedSize;
 						pxBlock->xBlockSize = xWantedSize;
 
-						/* Insert the new block into the list of free blocks. */
+						/* Insert the new block into the list of free
+						 * blocks. */
 						prvInsertBlockIntoFreeList(pxNewBlockLink);
 					} else {
 						mtCOVERAGE_TEST_MARKER();
@@ -236,7 +244,8 @@ void *pvPortMalloc(size_t xWantedSize)
 					xFreeBytesRemaining -= pxBlock->xBlockSize;
 
 					if (xFreeBytesRemaining < xMinimumEverFreeBytesRemaining) {
-						xMinimumEverFreeBytesRemaining = xFreeBytesRemaining;
+						xMinimumEverFreeBytesRemaining =
+							xFreeBytesRemaining;
 					} else {
 						mtCOVERAGE_TEST_MARKER();
 					}
@@ -410,7 +419,8 @@ static void prvInsertBlockIntoFreeList(BlockLink_t *pxBlockToInsert)
 		if (pxIterator->pxNextFreeBlock != pxEnd) {
 			/* Form one big block from the two blocks. */
 			pxBlockToInsert->xBlockSize += pxIterator->pxNextFreeBlock->xBlockSize;
-			pxBlockToInsert->pxNextFreeBlock = pxIterator->pxNextFreeBlock->pxNextFreeBlock;
+			pxBlockToInsert->pxNextFreeBlock =
+				pxIterator->pxNextFreeBlock->pxNextFreeBlock;
 		} else {
 			pxBlockToInsert->pxNextFreeBlock = pxEnd;
 		}

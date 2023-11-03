@@ -67,7 +67,8 @@
     1 tab == 4 spaces!
 */
 
-/* This file was separated prom original port.c by SDK team to enable efective tickless idle mode implementation. */
+/* This file was separated prom original port.c by SDK team to enable efective tickless idle mode
+ * implementation. */
 
 #ifndef FSL_TICKLESS_GENERIC_H
 #define FSL_TICKLESS_GENERIC_H

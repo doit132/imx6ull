@@ -147,7 +147,8 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime)
 		ulTimerCountsForOneTick = (configSYSTICK_CLOCK_HZ / configTICK_RATE_HZ);
 		ulStoppedTimerCompensation = 0;
 		ulEPITimerCountsForOneTick = configEPIT_RATE_HZ / configTICK_RATE_HZ;
-		xMaximumPossibleSuppressedTicks = portMAX_32_BIT_NUMBER / ulEPITimerCountsForOneTick;
+		xMaximumPossibleSuppressedTicks =
+			portMAX_32_BIT_NUMBER / ulEPITimerCountsForOneTick;
 	}
 
 	pxEpitBase = vPortGetTimerBase();
@@ -240,13 +241,13 @@ void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTime)
 			periods (not the ulReload value which accounted for part
 			ticks). */
 			ulCompleteTickPeriods =
-				(ulReloadValue - EPIT_GetCurrentTimerCount(pxEpitBase)) / ulEPITimerCountsForOneTick;
+				(ulReloadValue - EPIT_GetCurrentTimerCount(pxEpitBase)) /
+				ulEPITimerCountsForOneTick;
 		}
 
-		/* Stop EPIT when CPU waked up then set portGIC_SYSTICK_LOAD_REG back to its standard
-		value.  The critical section is used to ensure the tick interrupt
-		can only execute once in the case that the reload register is near
-		zero. */
+		/* Stop EPIT when CPU waked up then set portGIC_SYSTICK_LOAD_REG back to its
+		standard value.  The critical section is used to ensure the tick interrupt can only
+		execute once in the case that the reload register is near zero. */
 		EPIT_StopTimer(pxEpitBase);
 		portENTER_CRITICAL();
 		{

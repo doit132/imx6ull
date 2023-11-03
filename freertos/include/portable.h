@@ -139,7 +139,8 @@ extern "C" {
  *
  */
 #if (portUSING_MPU_WRAPPERS == 1)
-StackType_t *pxPortInitialiseStack(StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters,
+StackType_t *pxPortInitialiseStack(StackType_t *pxTopOfStack, TaskFunction_t pxCode,
+				   void *pvParameters,
 				   BaseType_t xRunPrivileged) PRIVILEGED_FUNCTION;
 #else
 StackType_t *pxPortInitialiseStack(StackType_t *pxTopOfStack, TaskFunction_t pxCode,
@@ -196,8 +197,10 @@ void vPortEndScheduler(void) PRIVILEGED_FUNCTION;
  */
 #if (portUSING_MPU_WRAPPERS == 1)
 struct xMEMORY_REGION;
-void vPortStoreTaskMPUSettings(xMPU_SETTINGS *xMPUSettings, const struct xMEMORY_REGION *const xRegions,
-			       StackType_t *pxBottomOfStack, uint32_t ulStackDepth) PRIVILEGED_FUNCTION;
+void vPortStoreTaskMPUSettings(xMPU_SETTINGS *xMPUSettings,
+			       const struct xMEMORY_REGION *const xRegions,
+			       StackType_t *pxBottomOfStack,
+			       uint32_t ulStackDepth) PRIVILEGED_FUNCTION;
 #endif
 
 #ifdef __cplusplus

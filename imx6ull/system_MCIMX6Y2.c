@@ -225,7 +225,8 @@ void SystemInit(void)
 #if ((__FPU_PRESENT == 1) && (__FPU_USED == 1))
 	cpacr = __get_CPACR();
 	/* Enable NEON and FPU */
-	cpacr = (cpacr & ~(CPACR_ASEDIS_Msk | CPACR_D32DIS_Msk)) | (3UL << CPACR_cp10_Pos) | (3UL << CPACR_cp11_Pos);
+	cpacr = (cpacr & ~(CPACR_ASEDIS_Msk | CPACR_D32DIS_Msk)) | (3UL << CPACR_cp10_Pos) |
+		(3UL << CPACR_cp11_Pos);
 	__set_CPACR(cpacr);
 
 	fpexc = __get_FPEXC();
@@ -247,13 +248,15 @@ void SystemCoreClockUpdate(void)
 		if (CCM->CCSR & CCM_CCSR_STEP_SEL_MASK) {
 			/* Get SYS PLL clock*/
 			if (CCM_ANALOG->PLL_SYS & CCM_ANALOG_PLL_SYS_DIV_SELECT_MASK) {
-				PLL2MainClock = (24000000UL * 22UL + (uint64_t)(24000000UL) *
-									     (uint64_t)(CCM_ANALOG->PLL_SYS_NUM) /
-									     (uint64_t)(CCM_ANALOG->PLL_SYS_DENOM));
+				PLL2MainClock = (24000000UL * 22UL +
+						 (uint64_t)(24000000UL) *
+							 (uint64_t)(CCM_ANALOG->PLL_SYS_NUM) /
+							 (uint64_t)(CCM_ANALOG->PLL_SYS_DENOM));
 			} else {
-				PLL2MainClock = (24000000UL * 20UL + (uint64_t)(24000000UL) *
-									     (uint64_t)(CCM_ANALOG->PLL_SYS_NUM) /
-									     (uint64_t)(CCM_ANALOG->PLL_SYS_DENOM));
+				PLL2MainClock = (24000000UL * 20UL +
+						 (uint64_t)(24000000UL) *
+							 (uint64_t)(CCM_ANALOG->PLL_SYS_NUM) /
+							 (uint64_t)(CCM_ANALOG->PLL_SYS_DENOM));
 			}
 
 			if (CCM->CCSR & CCM_CCSR_SECONDARY_CLK_SEL_MASK) {
@@ -262,7 +265,8 @@ void SystemCoreClockUpdate(void)
 			} else {
 				/* PLL2 PFD2 ---> Secondary_clk ---> Step Clock ---> CPU Clock */
 				PLL1SWClock = ((uint64_t)PLL2MainClock * 18) /
-					      ((CCM_ANALOG->PFD_528 & CCM_ANALOG_PFD_528_PFD2_FRAC_MASK) >>
+					      ((CCM_ANALOG->PFD_528 &
+						CCM_ANALOG_PFD_528_PFD2_FRAC_MASK) >>
 					       CCM_ANALOG_PFD_528_PFD2_FRAC_SHIFT);
 			}
 		} else {
@@ -272,12 +276,15 @@ void SystemCoreClockUpdate(void)
 	} else {
 		/* ARM PLL ---> CPU Clock */
 		PLL1SWClock = 24000000UL;
-		PLL1SWClock = (PLL1SWClock * (CCM_ANALOG->PLL_ARM & CCM_ANALOG_PLL_ARM_DIV_SELECT_MASK) >>
-			       CCM_ANALOG_PLL_ARM_DIV_SELECT_SHIFT) >>
-			      1UL;
+		PLL1SWClock =
+			(PLL1SWClock * (CCM_ANALOG->PLL_ARM & CCM_ANALOG_PLL_ARM_DIV_SELECT_MASK) >>
+			 CCM_ANALOG_PLL_ARM_DIV_SELECT_SHIFT) >>
+			1UL;
 	}
 
-	SystemCoreClock = PLL1SWClock / (((CCM->CACRR & CCM_CACRR_ARM_PODF_MASK) >> CCM_CACRR_ARM_PODF_SHIFT) + 1UL);
+	SystemCoreClock =
+		PLL1SWClock /
+		(((CCM->CACRR & CCM_CACRR_ARM_PODF_MASK) >> CCM_CACRR_ARM_PODF_SHIFT) + 1UL);
 }
 
 /* ----------------------------------------------------------------------------
@@ -398,8 +405,8 @@ void SystemSetupSystick(uint32_t tickRateHz, void *tickHandler, uint32_t intPrio
 	while (GPT1->CR == GPT_CR_SWR_MASK) {
 	}
 	/* Use peripheral clock source IPG */
-	GPT1->CR = GPT_CR_WAITEN_MASK | GPT_CR_STOPEN_MASK | GPT_CR_DOZEEN_MASK | GPT_CR_DBGEN_MASK |
-		   GPT_CR_ENMOD_MASK | GPT_CR_CLKSRC(1UL);
+	GPT1->CR = GPT_CR_WAITEN_MASK | GPT_CR_STOPEN_MASK | GPT_CR_DOZEEN_MASK |
+		   GPT_CR_DBGEN_MASK | GPT_CR_ENMOD_MASK | GPT_CR_CLKSRC(1UL);
 	/* Set clock divider to 1 */
 	GPT1->PR = 0;
 
@@ -410,7 +417,9 @@ void SystemSetupSystick(uint32_t tickRateHz, void *tickHandler, uint32_t intPrio
 		/* Pll3_sw_clk ---> Periph_clk2_clk ---> Periph_clk */
 		case CCM_CBCMR_PERIPH_CLK2_SEL(0U):
 			clockFreq = (24000000UL *
-				     ((CCM_ANALOG->PLL_USB1 & CCM_ANALOG_PLL_USB1_DIV_SELECT_MASK) ? 22U : 20U));
+				     ((CCM_ANALOG->PLL_USB1 & CCM_ANALOG_PLL_USB1_DIV_SELECT_MASK)
+					      ? 22U
+					      : 20U));
 			break;
 
 		/* Osc_clk ---> Periph_clk2_clk ---> Periph_clk */
@@ -425,18 +434,21 @@ void SystemSetupSystick(uint32_t tickRateHz, void *tickHandler, uint32_t intPrio
 			break;
 		}
 
-		clockFreq /=
-			(((CCM->CBCDR & CCM_CBCDR_PERIPH_CLK2_PODF_MASK) >> CCM_CBCDR_PERIPH_CLK2_PODF_SHIFT) + 1U);
+		clockFreq /= (((CCM->CBCDR & CCM_CBCDR_PERIPH_CLK2_PODF_MASK) >>
+			       CCM_CBCDR_PERIPH_CLK2_PODF_SHIFT) +
+			      1U);
 	}
 	/* Pll2_main_clk ---> Periph_clk */
 	else {
 		/* Get SYS PLL clock*/
 		if (CCM_ANALOG->PLL_SYS & CCM_ANALOG_PLL_SYS_DIV_SELECT_MASK) {
-			spllTmp = (24000000UL * 22UL + (uint64_t)(24000000UL) * (uint64_t)(CCM_ANALOG->PLL_SYS_NUM) /
-							       (uint64_t)(CCM_ANALOG->PLL_SYS_DENOM));
+			spllTmp = (24000000UL * 22UL +
+				   (uint64_t)(24000000UL) * (uint64_t)(CCM_ANALOG->PLL_SYS_NUM) /
+					   (uint64_t)(CCM_ANALOG->PLL_SYS_DENOM));
 		} else {
-			spllTmp = (24000000UL * 20UL + (uint64_t)(24000000UL) * (uint64_t)(CCM_ANALOG->PLL_SYS_NUM) /
-							       (uint64_t)(CCM_ANALOG->PLL_SYS_DENOM));
+			spllTmp = (24000000UL * 20UL +
+				   (uint64_t)(24000000UL) * (uint64_t)(CCM_ANALOG->PLL_SYS_NUM) /
+					   (uint64_t)(CCM_ANALOG->PLL_SYS_DENOM));
 		}
 
 		switch (CCM->CBCMR & CCM_CBCMR_PRE_PERIPH_CLK_SEL_MASK) {
@@ -447,16 +459,16 @@ void SystemSetupSystick(uint32_t tickRateHz, void *tickHandler, uint32_t intPrio
 
 		/* PLL2 PFD2 ---> Pll2_main_clk ---> Periph_clk */
 		case CCM_CBCMR_PRE_PERIPH_CLK_SEL(1U):
-			clockFreq =
-				((uint64_t)spllTmp * 18) / ((CCM_ANALOG->PFD_528 & CCM_ANALOG_PFD_528_PFD2_FRAC_MASK) >>
-							    CCM_ANALOG_PFD_528_PFD2_FRAC_SHIFT);
+			clockFreq = ((uint64_t)spllTmp * 18) /
+				    ((CCM_ANALOG->PFD_528 & CCM_ANALOG_PFD_528_PFD2_FRAC_MASK) >>
+				     CCM_ANALOG_PFD_528_PFD2_FRAC_SHIFT);
 			break;
 
 		/* PLL2 PFD0 ---> Pll2_main_clk ---> Periph_clk */
 		case CCM_CBCMR_PRE_PERIPH_CLK_SEL(2U):
-			clockFreq =
-				((uint64_t)spllTmp * 18) / ((CCM_ANALOG->PFD_528 & CCM_ANALOG_PFD_528_PFD0_FRAC_MASK) >>
-							    CCM_ANALOG_PFD_528_PFD0_FRAC_SHIFT);
+			clockFreq = ((uint64_t)spllTmp * 18) /
+				    ((CCM_ANALOG->PFD_528 & CCM_ANALOG_PFD_528_PFD0_FRAC_MASK) >>
+				     CCM_ANALOG_PFD_528_PFD0_FRAC_SHIFT);
 			break;
 
 		/* PLL2 PFD2 divided(/2) ---> Pll2_main_clk ---> Periph_clk */

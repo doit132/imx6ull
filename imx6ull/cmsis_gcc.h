@@ -1,9 +1,12 @@
 /**************************************************************************/ /**
-									      * @file     cmsis_gcc.h
-									      * @brief    CMSIS Cortex-M Core
-									      *Function/Instruction Header File
+									      * @file cmsis_gcc.h
+									      * @brief    CMSIS
+									      *Cortex-M Core
+									      *Function/Instruction
+									      *Header File
 									      * @version  V4.30
-									      * @date     20. October 2015
+									      * @date     20.
+									      *October 2015
 									      ******************************************************************************/
 /* Copyright (c) 2009 - 2015 ARM LIMITED
 
@@ -249,9 +252,9 @@ __attribute__((always_inline)) __STATIC_INLINE void __set_BASEPRI(uint32_t value
 
 /**
   \brief   Set Base Priority with condition
-  \details Assigns the given value to the Base Priority register only if BASEPRI masking is disabled,
-	   or the new value increases the BASEPRI priority level.
-  \param [in]    basePri  Base Priority value to set
+  \details Assigns the given value to the Base Priority register only if BASEPRI masking is
+  disabled, or the new value increases the BASEPRI priority level. \param [in]    basePri  Base
+  Priority value to set
  */
 __attribute__((always_inline)) __STATIC_INLINE void __set_BASEPRI_MAX(uint32_t value)
 {
@@ -352,7 +355,8 @@ __attribute__((always_inline)) __STATIC_INLINE void __NOP(void)
 
 /**
   \brief   Wait For Interrupt
-  \details Wait For Interrupt is a hint instruction that suspends execution until one of a number of events occurs.
+  \details Wait For Interrupt is a hint instruction that suspends execution until one of a number of
+  events occurs.
  */
 __attribute__((always_inline)) __STATIC_INLINE void __WFI(void)
 {
@@ -461,8 +465,9 @@ __attribute__((always_inline)) __STATIC_INLINE int32_t __REVSH(int32_t value)
 
 /**
   \brief   Rotate Right in unsigned value (32 bit)
-  \details Rotate Right (immediate) provides the value of the contents of a register rotated by a variable number of
-  bits. \param [in]    value  Value to rotate \param [in]    value  Number of Bits to rotate \return Rotated value
+  \details Rotate Right (immediate) provides the value of the contents of a register rotated by a
+  variable number of bits. \param [in]    value  Value to rotate \param [in]    value  Number of
+  Bits to rotate \return Rotated value
  */
 __attribute__((always_inline)) __STATIC_INLINE uint32_t __ROR(uint32_t op1, uint32_t op2)
 {
@@ -472,9 +477,9 @@ __attribute__((always_inline)) __STATIC_INLINE uint32_t __ROR(uint32_t op1, uint
 /**
   \brief   Breakpoint
   \details Causes the processor to enter Debug state.
-	   Debug tools can use this to investigate system state when the instruction at a particular address is reached.
-  \param [in]    value  is ignored by the processor.
-		 If required, a debugger can use it to store additional information about the breakpoint.
+	   Debug tools can use this to investigate system state when the instruction at a particular
+  address is reached. \param [in]    value  is ignored by the processor. If required, a debugger can
+  use it to store additional information about the breakpoint.
  */
 #define __BKPT(value) __ASM volatile("bkpt " #value)
 
@@ -578,7 +583,8 @@ __attribute__((always_inline)) __STATIC_INLINE uint32_t __LDREXW(volatile uint32
   \return          0  Function succeeded
   \return          1  Function failed
  */
-__attribute__((always_inline)) __STATIC_INLINE uint32_t __STREXB(uint8_t value, volatile uint8_t *addr)
+__attribute__((always_inline)) __STATIC_INLINE uint32_t __STREXB(uint8_t value,
+								 volatile uint8_t *addr)
 {
 	uint32_t result;
 
@@ -594,7 +600,8 @@ __attribute__((always_inline)) __STATIC_INLINE uint32_t __STREXB(uint8_t value, 
   \return          0  Function succeeded
   \return          1  Function failed
  */
-__attribute__((always_inline)) __STATIC_INLINE uint32_t __STREXH(uint16_t value, volatile uint16_t *addr)
+__attribute__((always_inline)) __STATIC_INLINE uint32_t __STREXH(uint16_t value,
+								 volatile uint16_t *addr)
 {
 	uint32_t result;
 
@@ -610,7 +617,8 @@ __attribute__((always_inline)) __STATIC_INLINE uint32_t __STREXH(uint16_t value,
   \return          0  Function succeeded
   \return          1  Function failed
  */
-__attribute__((always_inline)) __STATIC_INLINE uint32_t __STREXW(uint32_t value, volatile uint32_t *addr)
+__attribute__((always_inline)) __STATIC_INLINE uint32_t __STREXW(uint32_t value,
+								 volatile uint32_t *addr)
 {
 	uint32_t result;
 
@@ -634,11 +642,11 @@ __attribute__((always_inline)) __STATIC_INLINE void __CLREX(void)
 	  \param [in]    sat  Bit position to saturate to (1..32)
 	  \return             Saturated value
 	 */
-	#define __SSAT(ARG1, ARG2)                                                                                     \
-		({                                                                                                     \
-			uint32_t __RES, __ARG1 = (ARG1);                                                               \
-			__ASM("ssat %0, %1, %2" : "=r"(__RES) : "I"(ARG2), "r"(__ARG1));                               \
-			__RES;                                                                                         \
+	#define __SSAT(ARG1, ARG2)                                                                 \
+		({                                                                                 \
+			uint32_t __RES, __ARG1 = (ARG1);                                           \
+			__ASM("ssat %0, %1, %2" : "=r"(__RES) : "I"(ARG2), "r"(__ARG1));           \
+			__RES;                                                                     \
 		})
 
 	/**
@@ -648,11 +656,11 @@ __attribute__((always_inline)) __STATIC_INLINE void __CLREX(void)
 	  \param [in]    sat  Bit position to saturate to (0..31)
 	  \return             Saturated value
 	 */
-	#define __USAT(ARG1, ARG2)                                                                                     \
-		({                                                                                                     \
-			uint32_t __RES, __ARG1 = (ARG1);                                                               \
-			__ASM("usat %0, %1, %2" : "=r"(__RES) : "I"(ARG2), "r"(__ARG1));                               \
-			__RES;                                                                                         \
+	#define __USAT(ARG1, ARG2)                                                                 \
+		({                                                                                 \
+			uint32_t __RES, __ARG1 = (ARG1);                                           \
+			__ASM("usat %0, %1, %2" : "=r"(__RES) : "I"(ARG2), "r"(__ARG1));           \
+			__RES;                                                                     \
 		})
 
 /**
@@ -1067,7 +1075,8 @@ __attribute__((always_inline)) __STATIC_INLINE uint32_t __USAD8(uint32_t op1, ui
 	return (result);
 }
 
-__attribute__((always_inline)) __STATIC_INLINE uint32_t __USADA8(uint32_t op1, uint32_t op2, uint32_t op3)
+__attribute__((always_inline)) __STATIC_INLINE uint32_t __USADA8(uint32_t op1, uint32_t op2,
+								 uint32_t op3)
 {
 	uint32_t result;
 
@@ -1075,18 +1084,18 @@ __attribute__((always_inline)) __STATIC_INLINE uint32_t __USADA8(uint32_t op1, u
 	return (result);
 }
 
-	#define __SSAT16(ARG1, ARG2)                                                                                   \
-		({                                                                                                     \
-			int32_t __RES, __ARG1 = (ARG1);                                                                \
-			__ASM("ssat16 %0, %1, %2" : "=r"(__RES) : "I"(ARG2), "r"(__ARG1));                             \
-			__RES;                                                                                         \
+	#define __SSAT16(ARG1, ARG2)                                                               \
+		({                                                                                 \
+			int32_t __RES, __ARG1 = (ARG1);                                            \
+			__ASM("ssat16 %0, %1, %2" : "=r"(__RES) : "I"(ARG2), "r"(__ARG1));         \
+			__RES;                                                                     \
 		})
 
-	#define __USAT16(ARG1, ARG2)                                                                                   \
-		({                                                                                                     \
-			uint32_t __RES, __ARG1 = (ARG1);                                                               \
-			__ASM("usat16 %0, %1, %2" : "=r"(__RES) : "I"(ARG2), "r"(__ARG1));                             \
-			__RES;                                                                                         \
+	#define __USAT16(ARG1, ARG2)                                                               \
+		({                                                                                 \
+			uint32_t __RES, __ARG1 = (ARG1);                                           \
+			__ASM("usat16 %0, %1, %2" : "=r"(__RES) : "I"(ARG2), "r"(__ARG1));         \
+			__RES;                                                                     \
 		})
 
 __attribute__((always_inline)) __STATIC_INLINE uint32_t __UXTB16(uint32_t op1)
@@ -1137,7 +1146,8 @@ __attribute__((always_inline)) __STATIC_INLINE uint32_t __SMUADX(uint32_t op1, u
 	return (result);
 }
 
-__attribute__((always_inline)) __STATIC_INLINE uint32_t __SMLAD(uint32_t op1, uint32_t op2, uint32_t op3)
+__attribute__((always_inline)) __STATIC_INLINE uint32_t __SMLAD(uint32_t op1, uint32_t op2,
+								uint32_t op3)
 {
 	uint32_t result;
 
@@ -1145,7 +1155,8 @@ __attribute__((always_inline)) __STATIC_INLINE uint32_t __SMLAD(uint32_t op1, ui
 	return (result);
 }
 
-__attribute__((always_inline)) __STATIC_INLINE uint32_t __SMLADX(uint32_t op1, uint32_t op2, uint32_t op3)
+__attribute__((always_inline)) __STATIC_INLINE uint32_t __SMLADX(uint32_t op1, uint32_t op2,
+								 uint32_t op3)
 {
 	uint32_t result;
 
@@ -1153,7 +1164,8 @@ __attribute__((always_inline)) __STATIC_INLINE uint32_t __SMLADX(uint32_t op1, u
 	return (result);
 }
 
-__attribute__((always_inline)) __STATIC_INLINE uint64_t __SMLALD(uint32_t op1, uint32_t op2, uint64_t acc)
+__attribute__((always_inline)) __STATIC_INLINE uint64_t __SMLALD(uint32_t op1, uint32_t op2,
+								 uint64_t acc)
 {
 	union llreg_u {
 		uint32_t w32[2];
@@ -1174,7 +1186,8 @@ __attribute__((always_inline)) __STATIC_INLINE uint64_t __SMLALD(uint32_t op1, u
 	return (llr.w64);
 }
 
-__attribute__((always_inline)) __STATIC_INLINE uint64_t __SMLALDX(uint32_t op1, uint32_t op2, uint64_t acc)
+__attribute__((always_inline)) __STATIC_INLINE uint64_t __SMLALDX(uint32_t op1, uint32_t op2,
+								  uint64_t acc)
 {
 	union llreg_u {
 		uint32_t w32[2];
@@ -1211,7 +1224,8 @@ __attribute__((always_inline)) __STATIC_INLINE uint32_t __SMUSDX(uint32_t op1, u
 	return (result);
 }
 
-__attribute__((always_inline)) __STATIC_INLINE uint32_t __SMLSD(uint32_t op1, uint32_t op2, uint32_t op3)
+__attribute__((always_inline)) __STATIC_INLINE uint32_t __SMLSD(uint32_t op1, uint32_t op2,
+								uint32_t op3)
 {
 	uint32_t result;
 
@@ -1219,7 +1233,8 @@ __attribute__((always_inline)) __STATIC_INLINE uint32_t __SMLSD(uint32_t op1, ui
 	return (result);
 }
 
-__attribute__((always_inline)) __STATIC_INLINE uint32_t __SMLSDX(uint32_t op1, uint32_t op2, uint32_t op3)
+__attribute__((always_inline)) __STATIC_INLINE uint32_t __SMLSDX(uint32_t op1, uint32_t op2,
+								 uint32_t op3)
 {
 	uint32_t result;
 
@@ -1227,7 +1242,8 @@ __attribute__((always_inline)) __STATIC_INLINE uint32_t __SMLSDX(uint32_t op1, u
 	return (result);
 }
 
-__attribute__((always_inline)) __STATIC_INLINE uint64_t __SMLSLD(uint32_t op1, uint32_t op2, uint64_t acc)
+__attribute__((always_inline)) __STATIC_INLINE uint64_t __SMLSLD(uint32_t op1, uint32_t op2,
+								 uint64_t acc)
 {
 	union llreg_u {
 		uint32_t w32[2];
@@ -1248,7 +1264,8 @@ __attribute__((always_inline)) __STATIC_INLINE uint64_t __SMLSLD(uint32_t op1, u
 	return (llr.w64);
 }
 
-__attribute__((always_inline)) __STATIC_INLINE uint64_t __SMLSLDX(uint32_t op1, uint32_t op2, uint64_t acc)
+__attribute__((always_inline)) __STATIC_INLINE uint64_t __SMLSLDX(uint32_t op1, uint32_t op2,
+								  uint64_t acc)
 {
 	union llreg_u {
 		uint32_t w32[2];
@@ -1293,24 +1310,31 @@ __attribute__((always_inline)) __STATIC_INLINE int32_t __QSUB(int32_t op1, int32
 	return (result);
 }
 
-	#define __PKHBT(ARG1, ARG2, ARG3)                                                                              \
-		({                                                                                                     \
-			uint32_t __RES, __ARG1 = (ARG1), __ARG2 = (ARG2);                                              \
-			__ASM("pkhbt %0, %1, %2, lsl %3" : "=r"(__RES) : "r"(__ARG1), "r"(__ARG2), "I"(ARG3));         \
-			__RES;                                                                                         \
+	#define __PKHBT(ARG1, ARG2, ARG3)                                                          \
+		({                                                                                 \
+			uint32_t __RES, __ARG1 = (ARG1), __ARG2 = (ARG2);                          \
+			__ASM("pkhbt %0, %1, %2, lsl %3"                                           \
+			      : "=r"(__RES)                                                        \
+			      : "r"(__ARG1), "r"(__ARG2), "I"(ARG3));                              \
+			__RES;                                                                     \
 		})
 
-	#define __PKHTB(ARG1, ARG2, ARG3)                                                                              \
-		({                                                                                                     \
-			uint32_t __RES, __ARG1 = (ARG1), __ARG2 = (ARG2);                                              \
-			if (ARG3 == 0)                                                                                 \
-				__ASM("pkhtb %0, %1, %2" : "=r"(__RES) : "r"(__ARG1), "r"(__ARG2));                    \
-			else                                                                                           \
-				__ASM("pkhtb %0, %1, %2, asr %3" : "=r"(__RES) : "r"(__ARG1), "r"(__ARG2), "I"(ARG3)); \
-			__RES;                                                                                         \
+	#define __PKHTB(ARG1, ARG2, ARG3)                                                          \
+		({                                                                                 \
+			uint32_t __RES, __ARG1 = (ARG1), __ARG2 = (ARG2);                          \
+			if (ARG3 == 0)                                                             \
+				__ASM("pkhtb %0, %1, %2"                                           \
+				      : "=r"(__RES)                                                \
+				      : "r"(__ARG1), "r"(__ARG2));                                 \
+			else                                                                       \
+				__ASM("pkhtb %0, %1, %2, asr %3"                                   \
+				      : "=r"(__RES)                                                \
+				      : "r"(__ARG1), "r"(__ARG2), "I"(ARG3));                      \
+			__RES;                                                                     \
 		})
 
-__attribute__((always_inline)) __STATIC_INLINE uint32_t __SMMLA(int32_t op1, int32_t op2, int32_t op3)
+__attribute__((always_inline)) __STATIC_INLINE uint32_t __SMMLA(int32_t op1, int32_t op2,
+								int32_t op3)
 {
 	int32_t result;
 

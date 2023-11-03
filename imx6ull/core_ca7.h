@@ -64,8 +64,9 @@ extern "C" {
 
 	#elif defined(__ICCARM__)
 		#define __ASM __asm /*!< asm keyword for IAR Compiler */
-		#define __INLINE                                                                                       \
-			inline /*!< inline keyword for IAR Compiler. Only available in High optimization mode! */
+		#define __INLINE                                                                   \
+			inline /*!< inline keyword for IAR Compiler. Only available in High        \
+				  optimization mode! */
 		#define __STATIC_INLINE static inline
 
 	#elif defined(__TMS470__)
@@ -79,8 +80,10 @@ extern "C" {
 
 	#elif defined(__CSMC__)
 		#define __packed
-		#define __ASM _asm	/*!< asm keyword for COSMIC Compiler */
-		#define __INLINE inline /*!< inline keyword for COSMIC Compiler. Use -pc99 on compile line */
+		#define __ASM _asm /*!< asm keyword for COSMIC Compiler */
+		#define __INLINE                                                                   \
+			inline /*!< inline keyword for COSMIC Compiler. Use -pc99 on compile line  \
+				*/
 		#define __STATIC_INLINE static inline
 
 	#else
@@ -88,7 +91,8 @@ extern "C" {
 	#endif
 
 	/** __FPU_USED indicates whether an FPU is used or not.
-	    For this, __FPU_PRESENT has to be checked prior to making use of FPU specific registers and functions.
+	    For this, __FPU_PRESENT has to be checked prior to making use of FPU specific registers
+	   and functions.
 	*/
 	#if defined(__CC_ARM)
 		#if defined __TARGET_FPU_VFP
@@ -107,7 +111,7 @@ extern "C" {
 			#if (__FPU_PRESENT == 1)
 				#define __FPU_USED 1U
 			#else
-				#warning                                                                               \
+				#warning                                                           \
 					"Compiler generates FPU instructions for a device without an FPU (check __FPU_PRESENT)"
 				#define __FPU_USED 0U
 			#endif
@@ -204,9 +208,10 @@ extern "C" {
 		#define __IO volatile /*!< Defines 'read / write' permissions */
 
 		/* following defines should be used for structure members */
-		#define __IM volatile const /*! Defines 'read only' structure member permissions */
+		#define __IM volatile const /*! Defines 'read only' structure member permissions   \
+					     */
 		#define __OM volatile	    /*! Defines 'write only' structure member permissions */
-		#define __IOM volatile	    /*! Defines 'read / write' structure member permissions */
+		#define __IOM volatile /*! Defines 'read / write' structure member permissions */
 
 /*******************************************************************************
  *                 Register Abstraction
@@ -304,9 +309,9 @@ typedef union {
 		uint32_t HA : 1;	 /*!< bit:    17  Hardware Access flag enable */
 		uint32_t _reserved4 : 1; /*!< bit:    18  Reserved */
 		uint32_t WXN : 1;	 /*!< bit:    19  Write permission implies XN */
-		uint32_t UWXN : 1;	 /*!< bit:    20  Unprivileged write permission implies PL1 XN */
-		uint32_t FI : 1;	 /*!< bit:    21  Fast interrupts configuration enable */
-		uint32_t U : 1;		 /*!< bit:    22  Alignment model */
+		uint32_t UWXN : 1; /*!< bit:    20  Unprivileged write permission implies PL1 XN */
+		uint32_t FI : 1;   /*!< bit:    21  Fast interrupts configuration enable */
+		uint32_t U : 1;	   /*!< bit:    22  Alignment model */
 		uint32_t _reserved5 : 1; /*!< bit:    23  Reserved */
 		uint32_t VE : 1;	 /*!< bit:    24  Interrupt Vectors Enable */
 		uint32_t EE : 1;	 /*!< bit:    25  Exception Endianness */
@@ -386,14 +391,16 @@ typedef union {
 /* CP15 Register ACTLR */
 typedef union {
 	struct {
-		uint32_t _reserved0 : 6;  /*!< bit: 0.. 5  Reserved */
-		uint32_t SMP : 1;	  /*!< bit:     6  Enables coherent requests to the processor */
-		uint32_t _reserved1 : 3;  /*!< bit: 7.. 9  Reserved */
-		uint32_t DODMBS : 1;	  /*!< bit:    10  Disable optimized data memory barrier behavior */
-		uint32_t L2RADIS : 1;	  /*!< bit:    11  L2 Data Cache read-allocate mode disable */
-		uint32_t L1RADIS : 1;	  /*!< bit:    12  L1 Data Cache read-allocate mode disable */
-		uint32_t L1PCTL : 2;	  /*!< bit:13..14  L1 Data prefetch control */
-		uint32_t DDVM : 1;	  /*!< bit:    15  Disable Distributed Virtual Memory (DVM) transactions */
+		uint32_t _reserved0 : 6; /*!< bit: 0.. 5  Reserved */
+		uint32_t SMP : 1; /*!< bit:     6  Enables coherent requests to the processor */
+		uint32_t _reserved1 : 3; /*!< bit: 7.. 9  Reserved */
+		uint32_t DODMBS : 1; /*!< bit:    10  Disable optimized data memory barrier behavior
+				      */
+		uint32_t L2RADIS : 1; /*!< bit:    11  L2 Data Cache read-allocate mode disable */
+		uint32_t L1RADIS : 1; /*!< bit:    12  L1 Data Cache read-allocate mode disable */
+		uint32_t L1PCTL : 2;  /*!< bit:13..14  L1 Data prefetch control */
+		uint32_t DDVM : 1;    /*!< bit:    15  Disable Distributed Virtual Memory (DVM)
+					 transactions */
 		uint32_t _reserved3 : 12; /*!< bit:16..27  Reserved */
 		uint32_t DDI : 1;	  /*!< bit:    28  Disable dual issue */
 		uint32_t _reserved7 : 3;  /*!< bit:29..31  Reserved */
@@ -429,10 +436,11 @@ typedef union {
 		uint32_t cp10 : 2;	  /*!< bit:20..21  Access rights for coprocessor 10 */
 		uint32_t cp11 : 2;	  /*!< bit:22..23  Access rights for coprocessor 11 */
 		uint32_t _reserved1 : 6;  /*!< bit:24..29  Reserved */
-		uint32_t D32DIS : 1;	  /*!< bit:    30  Disable use of registers D16-D31 of the VFP register file */
-		uint32_t ASEDIS : 1;	  /*!< bit:    31  Disable Advanced SIMD Functionality */
-	} b;				  /*!< Structure used for bit  access */
-	uint32_t w;			  /*!< Type      used for word access */
+		uint32_t D32DIS : 1; /*!< bit:    30  Disable use of registers D16-D31 of the VFP
+					register file */
+		uint32_t ASEDIS : 1; /*!< bit:    31  Disable Advanced SIMD Functionality */
+	} b;			     /*!< Structure used for bit  access */
+	uint32_t w;		     /*!< Type      used for word access */
 } CPACR_Type;
 
 		#define CPACR_ASEDIS_Pos 31U			   /*!< CPACR: ASEDIS Position */
@@ -711,7 +719,8 @@ FORCEDINLINE __STATIC_INLINE void L1C_InvalidateInstructionCacheLine(const void 
 	__ISB();
 }
 
-FORCEDINLINE __STATIC_INLINE void L1C_InvalidateInstructionCacheRange(const void *VirtAddr, uint32_t length)
+FORCEDINLINE __STATIC_INLINE void L1C_InvalidateInstructionCacheRange(const void *VirtAddr,
+								      uint32_t length)
 {
 	uint32_t base = (uint32_t)VirtAddr & ~(L1C_INSTRUCTION_CACHE_LINE_SIZE - 1);
 	uint32_t end = (uint32_t)VirtAddr + length;
@@ -825,7 +834,8 @@ FORCEDINLINE __STATIC_INLINE void L1C_InvalidateDataCacheLine(const void *VirtAd
 	__DSB();
 }
 
-FORCEDINLINE __STATIC_INLINE void L1C_InvalidateDataCacheRange(const void *VirtAddr, uint32_t length)
+FORCEDINLINE __STATIC_INLINE void L1C_InvalidateDataCacheRange(const void *VirtAddr,
+							       uint32_t length)
 {
 	uint32_t base = (uint32_t)VirtAddr & ~(L1C_DATA_CACHE_LINE_SIZE - 1);
 	uint32_t end = (uint32_t)VirtAddr + length;
@@ -885,7 +895,8 @@ FORCEDINLINE __STATIC_INLINE void L1C_CleanInvalidateDataCacheLine(const void *V
 	__DSB();
 }
 
-FORCEDINLINE __STATIC_INLINE void L1C_CleanInvalidateDataCacheRange(const void *VirtAddr, uint32_t length)
+FORCEDINLINE __STATIC_INLINE void L1C_CleanInvalidateDataCacheRange(const void *VirtAddr,
+								    uint32_t length)
 {
 	uint32_t base = (uint32_t)VirtAddr & ~(L1C_DATA_CACHE_LINE_SIZE - 1);
 	uint32_t end = (uint32_t)VirtAddr + length;
@@ -937,8 +948,10 @@ enum _mmu_memory_type {
 
 enum _mmu_domain_access {
 	MMU_DomainNA = 0U,	/*!< No acces. Any access to the domain generates a Domain fault */
-	MMU_DomainClient = 1U,	/*!< Accesses are checked against the permission bits in the translation tables */
-	MMU_DomainManager = 3U, /*!< Accesses are not checked against the permission bits in the translation tables */
+	MMU_DomainClient = 1U,	/*!< Accesses are checked against the permission bits in the
+				   translation tables */
+	MMU_DomainManager = 3U, /*!< Accesses are not checked against the permission bits in the
+				   translation tables */
 };
 
 enum _mmu_access_permission {
@@ -951,10 +964,11 @@ enum _mmu_access_permission {
 };
 
 typedef struct _mmu_attribute_t {
-	uint8_t type;	       /*!< memory type, see _mmu_memory_type */
-	uint8_t domain;	       /*!< memory domain assignment */
-	uint8_t accessPerm;    /*!< the memory region access permission, see _mmu_access_permission */
-	uint8_t shareable : 1; /*!< memory region is shareable among multiple cores or system master */
+	uint8_t type;	    /*!< memory type, see _mmu_memory_type */
+	uint8_t domain;	    /*!< memory domain assignment */
+	uint8_t accessPerm; /*!< the memory region access permission, see _mmu_access_permission */
+	uint8_t shareable : 1; /*!< memory region is shareable among multiple cores or system master
+				*/
 	uint8_t notSecure : 1; /*!< translated physical address is in non-secure memory map */
 	uint8_t notGlob : 1;   /*!< the region translation is process specific */
 	uint8_t notExec : 1;   /*!< the memory region cannot execute code */
@@ -968,7 +982,8 @@ FORCEDINLINE __STATIC_INLINE void MMU_Init(uint32_t *L1Table)
 	/* Use TTBR translation, with 16KB L1Table size (N=0) */
 	__set_TTBCR(0);
 
-	/* Set TTBR0 with inner/outer write back write allocate and not shareable, [4:3]=01, [1]=0, [6,0]=01 */
+	/* Set TTBR0 with inner/outer write back write allocate and not shareable, [4:3]=01, [1]=0,
+	 * [6,0]=01 */
 	__set_TTBR0((L1Base & 0xFFFFC000UL) | 0x9UL);
 
 	/* Set all domains to client */
@@ -983,8 +998,9 @@ FORCEDINLINE __STATIC_INLINE void MMU_Init(uint32_t *L1Table)
 
 /* L1Table[4096], L2Table[256] */
 /* L2Table == NULL: use L1Table entry */
-FORCEDINLINE __STATIC_INLINE void MMU_ConfigPage(uint32_t *L1Table, uint32_t *L2Table, const void *VirtAddr,
-						 uint32_t PhysAddr, const mmu_attribute_t *Attr)
+FORCEDINLINE __STATIC_INLINE void MMU_ConfigPage(uint32_t *L1Table, uint32_t *L2Table,
+						 const void *VirtAddr, uint32_t PhysAddr,
+						 const mmu_attribute_t *Attr)
 {
 	uint32_t index1 = (uint32_t)VirtAddr >> 20;
 	uint32_t index2 = ((uint32_t)VirtAddr >> 12) & 0xFFUL;
@@ -1016,8 +1032,9 @@ FORCEDINLINE __STATIC_INLINE void MMU_ConfigPage(uint32_t *L1Table, uint32_t *L2
 }
 
 /* L1Table[4096], L2Table[256] */
-FORCEDINLINE __STATIC_INLINE void MMU_ConfigLargePage(uint32_t *L1Table, uint32_t *L2Table, const void *VirtAddr,
-						      uint32_t PhysAddr, const mmu_attribute_t *Attr)
+FORCEDINLINE __STATIC_INLINE void MMU_ConfigLargePage(uint32_t *L1Table, uint32_t *L2Table,
+						      const void *VirtAddr, uint32_t PhysAddr,
+						      const mmu_attribute_t *Attr)
 {
 	uint32_t i;
 	uint32_t index1 = (uint32_t)VirtAddr >> 20;
@@ -1052,8 +1069,8 @@ FORCEDINLINE __STATIC_INLINE void MMU_ConfigLargePage(uint32_t *L1Table, uint32_
 }
 
 /* L1Table[4096] */
-FORCEDINLINE __STATIC_INLINE void MMU_ConfigSection(uint32_t *L1Table, const void *VirtAddr, uint32_t PhysAddr,
-						    const mmu_attribute_t *Attr)
+FORCEDINLINE __STATIC_INLINE void MMU_ConfigSection(uint32_t *L1Table, const void *VirtAddr,
+						    uint32_t PhysAddr, const mmu_attribute_t *Attr)
 {
 	uint32_t index = (uint32_t)VirtAddr >> 20;
 	uint32_t descriptor = (PhysAddr & 0xFFF00000UL) |	    /* Physical address */
@@ -1072,7 +1089,8 @@ FORCEDINLINE __STATIC_INLINE void MMU_ConfigSection(uint32_t *L1Table, const voi
 }
 
 /* L1Table[4096] */
-FORCEDINLINE __STATIC_INLINE void MMU_ConfigSuperSection(uint32_t *L1Table, const void *VirtAddr, uint32_t PhysAddr,
+FORCEDINLINE __STATIC_INLINE void MMU_ConfigSuperSection(uint32_t *L1Table, const void *VirtAddr,
+							 uint32_t PhysAddr,
 							 const mmu_attribute_t *Attr)
 {
 	uint32_t i;
@@ -1084,10 +1102,10 @@ FORCEDINLINE __STATIC_INLINE void MMU_ConfigSuperSection(uint32_t *L1Table, cons
 			      (Attr->notExec ? (1UL << 4) : 0) |    /* XN */
 			      (((Attr->type >> 2) & 7UL) << 12) |   /* TEX */
 			      ((Attr->type & 3UL) << 2) |	    /* C,B */
-								    /* Supersection has fixed domain 0 */
-			      ((Attr->accessPerm & 4UL) << 15) |    /* AP[2] */
-			      ((Attr->accessPerm & 3UL) << 10) |    /* AP[1:0] */
-			      2;				    /* Section */
+			      /* Supersection has fixed domain 0 */
+			      ((Attr->accessPerm & 4UL) << 15) | /* AP[2] */
+			      ((Attr->accessPerm & 3UL) << 10) | /* AP[1:0] */
+			      2;				 /* Section */
 
 	for (i = 0; i < 16; i++)
 		L1Table[index + i] = descriptor;
@@ -1169,35 +1187,49 @@ typedef struct {
 	uint32_t RESERVED0[1024];
 	__IOM uint32_t D_CTLR; /*!< Offset: 0x1000 (R/W) Distributor Control Register */
 	__IM uint32_t D_TYPER; /*!< Offset: 0x1004 (R/ )  Interrupt Controller Type Register */
-	__IM uint32_t D_IIDR;  /*!< Offset: 0x1008 (R/ )  Distributor Implementer Identification Register */
+	__IM uint32_t D_IIDR;  /*!< Offset: 0x1008 (R/ )  Distributor Implementer Identification
+				  Register */
 	uint32_t RESERVED1[29];
 	__IOM uint32_t D_IGROUPR[16]; /*!< Offset: 0x1080 - 0x0BC (R/W) Interrupt Group Registers */
 	uint32_t RESERVED2[16];
-	__IOM uint32_t D_ISENABLER[16]; /*!< Offset: 0x1100 - 0x13C (R/W) Interrupt Set-Enable Registers */
+	__IOM uint32_t
+		D_ISENABLER[16]; /*!< Offset: 0x1100 - 0x13C (R/W) Interrupt Set-Enable Registers */
 	uint32_t RESERVED3[16];
-	__IOM uint32_t D_ICENABLER[16]; /*!< Offset: 0x1180 - 0x1BC (R/W) Interrupt Clear-Enable Registers */
+	__IOM uint32_t D_ICENABLER[16]; /*!< Offset: 0x1180 - 0x1BC (R/W) Interrupt Clear-Enable
+					   Registers */
 	uint32_t RESERVED4[16];
-	__IOM uint32_t D_ISPENDR[16]; /*!< Offset: 0x1200 - 0x23C (R/W) Interrupt Set-Pending Registers */
+	__IOM uint32_t
+		D_ISPENDR[16]; /*!< Offset: 0x1200 - 0x23C (R/W) Interrupt Set-Pending Registers */
 	uint32_t RESERVED5[16];
-	__IOM uint32_t D_ICPENDR[16]; /*!< Offset: 0x1280 - 0x2BC (R/W) Interrupt Clear-Pending Registers */
+	__IOM uint32_t D_ICPENDR[16]; /*!< Offset: 0x1280 - 0x2BC (R/W) Interrupt Clear-Pending
+					 Registers */
 	uint32_t RESERVED6[16];
-	__IOM uint32_t D_ISACTIVER[16]; /*!< Offset: 0x1300 - 0x33C (R/W) Interrupt Set-Active Registers */
+	__IOM uint32_t
+		D_ISACTIVER[16]; /*!< Offset: 0x1300 - 0x33C (R/W) Interrupt Set-Active Registers */
 	uint32_t RESERVED7[16];
-	__IOM uint32_t D_ICACTIVER[16]; /*!< Offset: 0x1380 - 0x3BC (R/W) Interrupt Clear-Active Registers */
+	__IOM uint32_t D_ICACTIVER[16]; /*!< Offset: 0x1380 - 0x3BC (R/W) Interrupt Clear-Active
+					   Registers */
 	uint32_t RESERVED8[16];
-	__IOM uint8_t D_IPRIORITYR[512]; /*!< Offset: 0x1400 - 0x5FC (R/W) Interrupt Priority Registers */
+	__IOM uint8_t
+		D_IPRIORITYR[512]; /*!< Offset: 0x1400 - 0x5FC (R/W) Interrupt Priority Registers */
 	uint32_t RESERVED9[128];
-	__IOM uint8_t D_ITARGETSR[512]; /*!< Offset: 0x1800 - 0x9FC (R/W) Interrupt Targets Registers */
+	__IOM uint8_t
+		D_ITARGETSR[512]; /*!< Offset: 0x1800 - 0x9FC (R/W) Interrupt Targets Registers */
 	uint32_t RESERVED10[128];
-	__IOM uint32_t D_ICFGR[32]; /*!< Offset: 0x1C00 - 0xC7C (R/W) Interrupt configuration registers */
+	__IOM uint32_t
+		D_ICFGR[32]; /*!< Offset: 0x1C00 - 0xC7C (R/W) Interrupt configuration registers */
 	uint32_t RESERVED11[32];
-	__IM uint32_t D_PPISR;	   /*!< Offset: 0x1D00 (R/ ) Private Peripheral Interrupt Status Register */
-	__IM uint32_t D_SPISR[15]; /*!< Offset: 0x1D04 - 0xD3C (R/ ) Shared Peripheral Interrupt Status Registers */
+	__IM uint32_t
+		D_PPISR; /*!< Offset: 0x1D00 (R/ ) Private Peripheral Interrupt Status Register */
+	__IM uint32_t D_SPISR[15]; /*!< Offset: 0x1D04 - 0xD3C (R/ ) Shared Peripheral Interrupt
+				      Status Registers */
 	uint32_t RESERVED12[112];
 	__OM uint32_t D_SGIR; /*!< Offset: 0x1F00 ( /W) Software Generated Interrupt Register */
 	uint32_t RESERVED13[3];
-	__IOM uint8_t D_CPENDSGIR[16]; /*!< Offset: 0x1F10 - 0xF1C (R/W) SGI Clear-Pending Registers */
-	__IOM uint8_t D_SPENDSGIR[16]; /*!< Offset: 0x1F20 - 0xF2C (R/W) SGI Set-Pending Registers */
+	__IOM uint8_t
+		D_CPENDSGIR[16]; /*!< Offset: 0x1F10 - 0xF1C (R/W) SGI Clear-Pending Registers */
+	__IOM uint8_t
+		D_SPENDSGIR[16]; /*!< Offset: 0x1F20 - 0xF2C (R/W) SGI Set-Pending Registers */
 	uint32_t RESERVED14[40];
 	__IM uint32_t D_PIDR4; /*!< Offset: 0x1FD0 (R/ ) Peripheral ID4 Register */
 	__IM uint32_t D_PIDR5; /*!< Offset: 0x1FD4 (R/ ) Peripheral ID5 Register */
@@ -1212,17 +1244,19 @@ typedef struct {
 	__IM uint32_t D_CIDR2; /*!< Offset: 0x1FF8 (R/ ) Component ID2 Register */
 	__IM uint32_t D_CIDR3; /*!< Offset: 0x1FFC (R/ ) Component ID3 Register */
 
-	__IOM uint32_t C_CTLR;	/*!< Offset: 0x2000 (R/W) CPU Interface Control Register */
-	__IOM uint32_t C_PMR;	/*!< Offset: 0x2004 (R/W) Interrupt Priority Mask Register */
-	__IOM uint32_t C_BPR;	/*!< Offset: 0x2008 (R/W) Binary Point Register */
-	__IM uint32_t C_IAR;	/*!< Offset: 0x200C (R/ ) Interrupt Acknowledge Register */
-	__OM uint32_t C_EOIR;	/*!< Offset: 0x2010 ( /W) End Of Interrupt Register */
-	__IM uint32_t C_RPR;	/*!< Offset: 0x2014 (R/ ) Running Priority Register */
-	__IM uint32_t C_HPPIR;	/*!< Offset: 0x2018 (R/ ) Highest Priority Pending Interrupt Register */
+	__IOM uint32_t C_CTLR; /*!< Offset: 0x2000 (R/W) CPU Interface Control Register */
+	__IOM uint32_t C_PMR;  /*!< Offset: 0x2004 (R/W) Interrupt Priority Mask Register */
+	__IOM uint32_t C_BPR;  /*!< Offset: 0x2008 (R/W) Binary Point Register */
+	__IM uint32_t C_IAR;   /*!< Offset: 0x200C (R/ ) Interrupt Acknowledge Register */
+	__OM uint32_t C_EOIR;  /*!< Offset: 0x2010 ( /W) End Of Interrupt Register */
+	__IM uint32_t C_RPR;   /*!< Offset: 0x2014 (R/ ) Running Priority Register */
+	__IM uint32_t
+		C_HPPIR; /*!< Offset: 0x2018 (R/ ) Highest Priority Pending Interrupt Register */
 	__IOM uint32_t C_ABPR;	/*!< Offset: 0x201C (R/W) Aliased Binary Point Register */
 	__IM uint32_t C_AIAR;	/*!< Offset: 0x2020 (R/ ) Aliased Interrupt Acknowledge Register */
 	__OM uint32_t C_AEOIR;	/*!< Offset: 0x2024 ( /W) Aliased End Of Interrupt Register */
-	__IM uint32_t C_AHPPIR; /*!< Offset: 0x2028 (R/ ) Aliased Highest Priority Pending Interrupt Register */
+	__IM uint32_t C_AHPPIR; /*!< Offset: 0x2028 (R/ ) Aliased Highest Priority Pending Interrupt
+				   Register */
 	uint32_t RESERVED15[41];
 	__IOM uint32_t C_APR0; /*!< Offset: 0x20D0 (R/W) Active Priority Register */
 	uint32_t RESERVED16[3];
@@ -1265,14 +1299,16 @@ FORCEDINLINE __STATIC_INLINE void GIC_EnableIRQ(IRQn_Type IRQn)
 {
 	GIC_Type *gic = (GIC_Type *)(__get_CBAR() & 0xFFFF0000UL);
 
-	gic->D_ISENABLER[((uint32_t)(int32_t)IRQn) >> 5] = (uint32_t)(1UL << (((uint32_t)(int32_t)IRQn) & 0x1FUL));
+	gic->D_ISENABLER[((uint32_t)(int32_t)IRQn) >> 5] =
+		(uint32_t)(1UL << (((uint32_t)(int32_t)IRQn) & 0x1FUL));
 }
 
 FORCEDINLINE __STATIC_INLINE void GIC_DisableIRQ(IRQn_Type IRQn)
 {
 	GIC_Type *gic = (GIC_Type *)(__get_CBAR() & 0xFFFF0000UL);
 
-	gic->D_ICENABLER[((uint32_t)(int32_t)IRQn) >> 5] = (uint32_t)(1UL << (((uint32_t)(int32_t)IRQn) & 0x1FUL));
+	gic->D_ICENABLER[((uint32_t)(int32_t)IRQn) >> 5] =
+		(uint32_t)(1UL << (((uint32_t)(int32_t)IRQn) & 0x1FUL));
 }
 
 /* Return IRQ number (and CPU source in SGI case) */
@@ -1324,7 +1360,8 @@ FORCEDINLINE __STATIC_INLINE uint32_t GIC_GetPriority(IRQn_Type IRQn)
 {
 	GIC_Type *gic = (GIC_Type *)(__get_CBAR() & 0xFFFF0000UL);
 
-	return (((uint32_t)gic->D_IPRIORITYR[((uint32_t)(int32_t)IRQn)] >> (8UL - __GIC_PRIO_BITS)));
+	return (((uint32_t)gic->D_IPRIORITYR[((uint32_t)(int32_t)IRQn)] >>
+		 (8UL - __GIC_PRIO_BITS)));
 }
 
 		#ifdef __cplusplus

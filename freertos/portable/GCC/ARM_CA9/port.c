@@ -155,24 +155,24 @@ mode. */
 /* The critical section macros only mask interrupts up to an application
 determined priority level.  Sometimes it is necessary to turn interrupt off in
 the CPU itself before modifying certain hardware registers. */
-#define portCPU_IRQ_DISABLE()                                                                                          \
-	__asm volatile("CPSID i");                                                                                     \
-	__asm volatile("DSB");                                                                                         \
+#define portCPU_IRQ_DISABLE()                                                                      \
+	__asm volatile("CPSID i");                                                                 \
+	__asm volatile("DSB");                                                                     \
 	__asm volatile("ISB");
 
-#define portCPU_IRQ_ENABLE()                                                                                           \
-	__asm volatile("CPSIE i");                                                                                     \
-	__asm volatile("DSB");                                                                                         \
+#define portCPU_IRQ_ENABLE()                                                                       \
+	__asm volatile("CPSIE i");                                                                 \
+	__asm volatile("DSB");                                                                     \
 	__asm volatile("ISB");
 
 /* Macro to unmask all interrupt priorities. */
-#define portCLEAR_INTERRUPT_MASK()                                                                                     \
-	{                                                                                                              \
-		portCPU_IRQ_DISABLE();                                                                                 \
-		portICCPMR_PRIORITY_MASK_REGISTER = portUNMASK_VALUE;                                                  \
-		__asm volatile("DSB		\n"                                                                               \
-			       "ISB		\n");                                                                  \
-		portCPU_IRQ_ENABLE();                                                                                  \
+#define portCLEAR_INTERRUPT_MASK()                                                                 \
+	{                                                                                          \
+		portCPU_IRQ_DISABLE();                                                             \
+		portICCPMR_PRIORITY_MASK_REGISTER = portUNMASK_VALUE;                              \
+		__asm volatile("DSB		\n"                                                           \
+			       "ISB		\n");                                              \
+		portCPU_IRQ_ENABLE();                                                              \
 	}
 
 #define portINTERRUPT_PRIORITY_REGISTER_OFFSET 0x400UL
@@ -258,7 +258,8 @@ __attribute__((used)) const uint32_t ulMaxAPIPriorityMask =
 /*
  * See header file for description.
  */
-StackType_t *pxPortInitialiseStack(StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters)
+StackType_t *pxPortInitialiseStack(StackType_t *pxTopOfStack, TaskFunction_t pxCode,
+				   void *pvParameters)
 {
 	/* Setup the initial stack of the task.  The stack is set exactly as
 	expected by the portRESTORE_CONTEXT() macro.
@@ -412,9 +413,11 @@ BaseType_t xPortStartScheduler(void)
 		/* Only continue if the binary point value is set to its lowest possible
 		setting.  See the comments in vPortValidateInterruptPriority() below for
 		more information. */
-		configASSERT((portICCBPR_BINARY_POINT_REGISTER & portBINARY_POINT_BITS) <= portMAX_BINARY_POINT_VALUE);
+		configASSERT((portICCBPR_BINARY_POINT_REGISTER & portBINARY_POINT_BITS) <=
+			     portMAX_BINARY_POINT_VALUE);
 
-		if ((portICCBPR_BINARY_POINT_REGISTER & portBINARY_POINT_BITS) <= portMAX_BINARY_POINT_VALUE) {
+		if ((portICCBPR_BINARY_POINT_REGISTER & portBINARY_POINT_BITS) <=
+		    portMAX_BINARY_POINT_VALUE) {
 			/* Interrupts are turned off in the CPU itself to ensure tick does
 			not execute	while the scheduler is being started.  Interrupts are
 			automatically turned back on in the CPU when the first task starts
@@ -494,7 +497,8 @@ void FreeRTOS_Tick_Handler(void)
 	necessary to turn off interrupts in the CPU itself while the ICCPMR is being
 	updated. */
 	portCPU_IRQ_DISABLE();
-	portICCPMR_PRIORITY_MASK_REGISTER = (uint32_t)(configMAX_API_CALL_INTERRUPT_PRIORITY << portPRIORITY_SHIFT);
+	portICCPMR_PRIORITY_MASK_REGISTER =
+		(uint32_t)(configMAX_API_CALL_INTERRUPT_PRIORITY << portPRIORITY_SHIFT);
 	__asm volatile("dsb		\n"
 		       "isb		\n");
 	portCPU_IRQ_ENABLE();
@@ -590,7 +594,8 @@ void vPortValidateInterruptPriority(void)
 	The priority grouping is configured by the GIC's binary point register
 	(ICCBPR).  Writting 0 to ICCBPR will ensure it is set to its lowest
 	possible value (which may be above 0). */
-	configASSERT((portICCBPR_BINARY_POINT_REGISTER & portBINARY_POINT_BITS) <= portMAX_BINARY_POINT_VALUE);
+	configASSERT((portICCBPR_BINARY_POINT_REGISTER & portBINARY_POINT_BITS) <=
+		     portMAX_BINARY_POINT_VALUE);
 }
 
 #endif /* configASSERT_DEFINED */

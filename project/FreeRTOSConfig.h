@@ -140,11 +140,11 @@
 #define configTIMER_TASK_STACK_DEPTH (configMINIMAL_STACK_SIZE * 2)
 
 /* Define to trap errors during development. */
-#define configASSERT(x)                                                                                                \
-	if ((x) == 0) {                                                                                                \
-		taskDISABLE_INTERRUPTS();                                                                              \
-		for (;;)                                                                                               \
-			;                                                                                              \
+#define configASSERT(x)                                                                            \
+	if ((x) == 0) {                                                                            \
+		taskDISABLE_INTERRUPTS();                                                          \
+		for (;;)                                                                           \
+			;                                                                          \
 	}
 
 /* Optional functions - most linkers will remove unused functions anyway. */
@@ -168,17 +168,18 @@
 #define configMAX_API_CALL_INTERRUPT_PRIORITY 20
 
 /* Systick definitions */
-#define configSETUP_TICK_INTERRUPT()                                                                                   \
-	do {                                                                                                           \
-		void SystemSetupSystick(uint32_t tickRateHz, void *tickHandler, uint32_t intPriority);                 \
-		/* Setup systick with lowest priority */                                                               \
-		SystemSetupSystick(configTICK_RATE_HZ, (void *)FreeRTOS_Tick_Handler,                                  \
-				   configUNIQUE_INTERRUPT_PRIORITIES - 2);                                             \
+#define configSETUP_TICK_INTERRUPT()                                                               \
+	do {                                                                                       \
+		void SystemSetupSystick(uint32_t tickRateHz, void *tickHandler,                    \
+					uint32_t intPriority);                                     \
+		/* Setup systick with lowest priority */                                           \
+		SystemSetupSystick(configTICK_RATE_HZ, (void *)FreeRTOS_Tick_Handler,              \
+				   configUNIQUE_INTERRUPT_PRIORITIES - 2);                         \
 	} while (0)
-#define configCLEAR_TICK_INTERRUPT()                                                                                   \
-	do {                                                                                                           \
-		void SystemClearSystickFlag(void);                                                                     \
-		SystemClearSystickFlag();                                                                              \
+#define configCLEAR_TICK_INTERRUPT()                                                               \
+	do {                                                                                       \
+		void SystemClearSystickFlag(void);                                                 \
+		SystemClearSystickFlag();                                                          \
 	} while (0)
 
 /* Definitions that map the FreeRTOS port exception handlers to startup handler names. */

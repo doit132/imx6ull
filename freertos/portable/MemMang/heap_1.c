@@ -117,7 +117,8 @@ void *pvPortMalloc(size_t xWantedSize)
 	{
 		if (xWantedSize & portBYTE_ALIGNMENT_MASK) {
 			/* Byte alignment required. */
-			xWantedSize += (portBYTE_ALIGNMENT - (xWantedSize & portBYTE_ALIGNMENT_MASK));
+			xWantedSize +=
+				(portBYTE_ALIGNMENT - (xWantedSize & portBYTE_ALIGNMENT_MASK));
 		}
 	}
 #endif
@@ -126,8 +127,9 @@ void *pvPortMalloc(size_t xWantedSize)
 	{
 		if (pucAlignedHeap == NULL) {
 			/* Ensure the heap starts on a correctly aligned boundary. */
-			pucAlignedHeap = (uint8_t *)(((portPOINTER_SIZE_TYPE)&ucHeap[portBYTE_ALIGNMENT]) &
-						     (~((portPOINTER_SIZE_TYPE)portBYTE_ALIGNMENT_MASK)));
+			pucAlignedHeap =
+				(uint8_t *)(((portPOINTER_SIZE_TYPE)&ucHeap[portBYTE_ALIGNMENT]) &
+					    (~((portPOINTER_SIZE_TYPE)portBYTE_ALIGNMENT_MASK)));
 		}
 
 		/* Check there is enough room left for the allocation. */

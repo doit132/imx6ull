@@ -80,8 +80,9 @@ void vListInitialise(List_t *const pxList)
 	/* The list structure contains a list item which is used to mark the
 	end of the list.  To initialise the list the list end is inserted
 	as the only list entry. */
-	pxList->pxIndex = (ListItem_t *)&(pxList->xListEnd); /*lint !e826 !e740 The mini list structure is used as the
-								list end to save RAM.  This is checked and valid. */
+	pxList->pxIndex = (ListItem_t *)&(
+		pxList->xListEnd); /*lint !e826 !e740 The mini list structure is used as the
+				      list end to save RAM.  This is checked and valid. */
 
 	/* The list end value is the highest possible value in the list to
 	ensure it remains at the end of the list. */
@@ -89,12 +90,12 @@ void vListInitialise(List_t *const pxList)
 
 	/* The list end next and previous pointers point to itself so we know
 	when the list is empty. */
-	pxList->xListEnd.pxNext =
-		(ListItem_t *)&(pxList->xListEnd); /*lint !e826 !e740 The mini list structure is used as the list end to
-						      save RAM.  This is checked and valid. */
-	pxList->xListEnd.pxPrevious =
-		(ListItem_t *)&(pxList->xListEnd); /*lint !e826 !e740 The mini list structure is used as the list end to
-						      save RAM.  This is checked and valid. */
+	pxList->xListEnd.pxNext = (ListItem_t *)&(
+		pxList->xListEnd); /*lint !e826 !e740 The mini list structure is used as the list
+				      end to save RAM.  This is checked and valid. */
+	pxList->xListEnd.pxPrevious = (ListItem_t *)&(
+		pxList->xListEnd); /*lint !e826 !e740 The mini list structure is used as the list
+				      end to save RAM.  This is checked and valid. */
 
 	pxList->uxNumberOfItems = (UBaseType_t)0U;
 
@@ -192,8 +193,9 @@ void vListInsert(List_t *const pxList, ListItem_t *const pxNewListItem)
 
 		for (pxIterator = (ListItem_t *)&(pxList->xListEnd);
 		     pxIterator->pxNext->xItemValue <= xValueOfInsertion;
-		     pxIterator = pxIterator->pxNext) /*lint !e826 !e740 The mini list structure is used as the list end
-							 to save RAM.  This is checked and valid. */
+		     pxIterator = pxIterator->pxNext) /*lint !e826 !e740 The mini list structure is
+							 used as the list end to save RAM.  This is
+							 checked and valid. */
 		{
 			/* There is nothing to do here, just iterating to the wanted
 			insertion position. */

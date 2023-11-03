@@ -52,7 +52,8 @@
 
 /*! @name Pin function ID */
 /*@{*/
-/*! @brief The pin function ID is a tuple of <muxRegister muxMode inputRegister inputDaisy configRegister> */
+/*! @brief The pin function ID is a tuple of <muxRegister muxMode inputRegister inputDaisy
+ * configRegister> */
 #define IOMUXC_SNVS_BOOT_MODE0_GPIO5_IO10 0x02290000U, 0x5U, 0x00000000U, 0x0U, 0x02290044U
 #define IOMUXC_SNVS_BOOT_MODE1_GPIO5_IO11 0x02290004U, 0x5U, 0x00000000U, 0x0U, 0x02290048U
 #define IOMUXC_SNVS_SNVS_TAMPER0_GPIO5_IO00 0x02290008U, 0x5U, 0x00000000U, 0x0U, 0x0229004CU
@@ -1096,8 +1097,9 @@ extern "C" {
  * @param configRegister  The config register.
  * @param inputOnfield   Software input on field.
  */
-static inline void IOMUXC_SetPinMux(uint32_t muxRegister, uint32_t muxMode, uint32_t inputRegister, uint32_t inputDaisy,
-				    uint32_t configRegister, uint32_t inputOnfield)
+static inline void IOMUXC_SetPinMux(uint32_t muxRegister, uint32_t muxMode, uint32_t inputRegister,
+				    uint32_t inputDaisy, uint32_t configRegister,
+				    uint32_t inputOnfield)
 {
 	*((volatile uint32_t *)muxRegister) =
 		IOMUXC_SW_MUX_CTL_PAD_MUX_MODE(muxMode) | IOMUXC_SW_MUX_CTL_PAD_SION(inputOnfield);
@@ -1113,7 +1115,8 @@ static inline void IOMUXC_SetPinMux(uint32_t muxRegister, uint32_t muxMode, uint
  *
  * This is an example to set pin configuration for IOMUXC_GPIO1_IO02_I2C1_SCL:
  * @code
- * IOMUXC_SetPinConfig(IOMUXC_GPIO1_IO02_I2C1_SCL, IOMUXC_SW_PAD_CTL_PAD_PUE_MASK | IOMUXC_SW_PAD_CTL_PAD_PUS(2U));
+ * IOMUXC_SetPinConfig(IOMUXC_GPIO1_IO02_I2C1_SCL, IOMUXC_SW_PAD_CTL_PAD_PUE_MASK |
+ * IOMUXC_SW_PAD_CTL_PAD_PUS(2U));
  * @endcode
  *
  * @param muxRegister  The pin mux register.
@@ -1123,8 +1126,9 @@ static inline void IOMUXC_SetPinMux(uint32_t muxRegister, uint32_t muxMode, uint
  * @param configRegister  The config register.
  * @param configValue   The pin config value.
  */
-static inline void IOMUXC_SetPinConfig(uint32_t muxRegister, uint32_t muxMode, uint32_t inputRegister,
-				       uint32_t inputDaisy, uint32_t configRegister, uint32_t configValue)
+static inline void IOMUXC_SetPinConfig(uint32_t muxRegister, uint32_t muxMode,
+				       uint32_t inputRegister, uint32_t inputDaisy,
+				       uint32_t configRegister, uint32_t configValue)
 {
 	if (configRegister) {
 		*((volatile uint32_t *)configRegister) = configValue;

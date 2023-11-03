@@ -140,7 +140,8 @@ void SystemInstallIrqHandler(IRQn_Type irq, system_irq_handler_t handler, void *
  *
  * It is called from IRQ exception context and dispatches to registered handler according to
  * GICC_IAR interrupt number.
- * The default implementation is weak and user can override this function with his own SystemIrqHandler.
+ * The default implementation is weak and user can override this function with his own
+ * SystemIrqHandler.
  *
  * @param giccIar IRQ acknowledge value read from GICC_IAR
  */

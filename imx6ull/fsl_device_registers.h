@@ -36,8 +36,8 @@
 	 *
 	 * The CPU macro should be declared in the project or makefile.
 	 */
-	#if (defined(CPU_MCIMX6Y2CVM05) || defined(CPU_MCIMX6Y2CVM08) || defined(CPU_MCIMX6Y2DVM05) ||                 \
-	     defined(CPU_MCIMX6Y2DVM09))
+	#if (defined(CPU_MCIMX6Y2CVM05) || defined(CPU_MCIMX6Y2CVM08) ||                           \
+	     defined(CPU_MCIMX6Y2DVM05) || defined(CPU_MCIMX6Y2DVM09))
 
 		#define MCIMX6Y2_SERIES
 

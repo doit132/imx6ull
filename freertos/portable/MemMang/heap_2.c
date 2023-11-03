@@ -116,7 +116,8 @@ typedef struct A_BLOCK_LINK {
 	size_t xBlockSize;		      /*<< The size of the free block. */
 } BlockLink_t;
 
-static const uint16_t heapSTRUCT_SIZE = ((sizeof(BlockLink_t) + (portBYTE_ALIGNMENT - 1)) & ~portBYTE_ALIGNMENT_MASK);
+static const uint16_t heapSTRUCT_SIZE =
+	((sizeof(BlockLink_t) + (portBYTE_ALIGNMENT - 1)) & ~portBYTE_ALIGNMENT_MASK);
 #define heapMINIMUM_BLOCK_SIZE ((size_t)(heapSTRUCT_SIZE * 2))
 
 /* Create a couple of list links to mark the start and end of the list. */
@@ -133,24 +134,24 @@ static size_t xFreeBytesRemaining = configADJUSTED_HEAP_SIZE;
  * the block.  Small blocks at the start of the list and large blocks at the end
  * of the list.
  */
-#define prvInsertBlockIntoFreeList(pxBlockToInsert)                                                                    \
-	{                                                                                                              \
-		BlockLink_t *pxIterator;                                                                               \
-		size_t xBlockSize;                                                                                     \
-                                                                                                                       \
-		xBlockSize = pxBlockToInsert->xBlockSize;                                                              \
-                                                                                                                       \
-		/* Iterate through the list until a block is found that has a larger size */                           \
-		/* than the block we are inserting. */                                                                 \
-		for (pxIterator = &xStart; pxIterator->pxNextFreeBlock->xBlockSize < xBlockSize;                       \
-		     pxIterator = pxIterator->pxNextFreeBlock) {                                                       \
-			/* There is nothing to do here - just iterate to the correct position. */                      \
-		}                                                                                                      \
-                                                                                                                       \
-		/* Update the list to include the block being inserted in the correct */                               \
-		/* position. */                                                                                        \
-		pxBlockToInsert->pxNextFreeBlock = pxIterator->pxNextFreeBlock;                                        \
-		pxIterator->pxNextFreeBlock = pxBlockToInsert;                                                         \
+#define prvInsertBlockIntoFreeList(pxBlockToInsert)                                                \
+	{                                                                                          \
+		BlockLink_t *pxIterator;                                                           \
+		size_t xBlockSize;                                                                 \
+                                                                                                   \
+		xBlockSize = pxBlockToInsert->xBlockSize;                                          \
+                                                                                                   \
+		/* Iterate through the list until a block is found that has a larger size */       \
+		/* than the block we are inserting. */                                             \
+		for (pxIterator = &xStart; pxIterator->pxNextFreeBlock->xBlockSize < xBlockSize;   \
+		     pxIterator = pxIterator->pxNextFreeBlock) {                                   \
+			/* There is nothing to do here - just iterate to the correct position. */  \
+		}                                                                                  \
+                                                                                                   \
+		/* Update the list to include the block being inserted in the correct */           \
+		/* position. */                                                                    \
+		pxBlockToInsert->pxNextFreeBlock = pxIterator->pxNextFreeBlock;                    \
+		pxIterator->pxNextFreeBlock = pxBlockToInsert;                                     \
 	}
 /*-----------------------------------------------------------*/
 
@@ -177,7 +178,8 @@ void *pvPortMalloc(size_t xWantedSize)
 			/* Ensure that blocks are always aligned to the required number of bytes. */
 			if ((xWantedSize & portBYTE_ALIGNMENT_MASK) != 0) {
 				/* Byte alignment required. */
-				xWantedSize += (portBYTE_ALIGNMENT - (xWantedSize & portBYTE_ALIGNMENT_MASK));
+				xWantedSize += (portBYTE_ALIGNMENT -
+						(xWantedSize & portBYTE_ALIGNMENT_MASK));
 			}
 		}
 
@@ -186,16 +188,19 @@ void *pvPortMalloc(size_t xWantedSize)
 			(smallest) block until one of adequate size is found. */
 			pxPreviousBlock = &xStart;
 			pxBlock = xStart.pxNextFreeBlock;
-			while ((pxBlock->xBlockSize < xWantedSize) && (pxBlock->pxNextFreeBlock != NULL)) {
+			while ((pxBlock->xBlockSize < xWantedSize) &&
+			       (pxBlock->pxNextFreeBlock != NULL)) {
 				pxPreviousBlock = pxBlock;
 				pxBlock = pxBlock->pxNextFreeBlock;
 			}
 
-			/* If we found the end marker then a block of adequate size was not found. */
+			/* If we found the end marker then a block of adequate size was not found.
+			 */
 			if (pxBlock != &xEnd) {
 				/* Return the memory space - jumping over the BlockLink_t structure
 				at its start. */
-				pvReturn = (void *)(((uint8_t *)pxPreviousBlock->pxNextFreeBlock) + heapSTRUCT_SIZE);
+				pvReturn = (void *)(((uint8_t *)pxPreviousBlock->pxNextFreeBlock) +
+						    heapSTRUCT_SIZE);
 
 				/* This block is being returned for use so must be taken out of the
 				list of free blocks. */
@@ -205,12 +210,15 @@ void *pvPortMalloc(size_t xWantedSize)
 				if ((pxBlock->xBlockSize - xWantedSize) > heapMINIMUM_BLOCK_SIZE) {
 					/* This block is to be split into two.  Create a new block
 					following the number of bytes requested. The void cast is
-					used to prevent byte alignment warnings from the compiler. */
-					pxNewBlockLink = (void *)(((uint8_t *)pxBlock) + xWantedSize);
+					used to prevent byte alignment warnings from the compiler.
+				      */
+					pxNewBlockLink =
+						(void *)(((uint8_t *)pxBlock) + xWantedSize);
 
 					/* Calculate the sizes of two blocks split from the single
 					block. */
-					pxNewBlockLink->xBlockSize = pxBlock->xBlockSize - xWantedSize;
+					pxNewBlockLink->xBlockSize =
+						pxBlock->xBlockSize - xWantedSize;
 					pxBlock->xBlockSize = xWantedSize;
 
 					/* Insert the new block into the list of free blocks. */
