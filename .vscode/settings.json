@@ -9,6 +9,7 @@
         "Kconfig": "kconfig",
         ".ccls": "yaml",
         "*.build": "makefile",
-        "bsp_delay.h": "c"
+        "bsp_delay.h": "c",
+        "bsp_uart.h": "c"
     }
 }
