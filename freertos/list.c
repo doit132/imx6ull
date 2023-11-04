@@ -67,8 +67,8 @@
     1 tab == 4 spaces!
 */
 
-#include "list.h"
 #include "FreeRTOS.h"
+#include "list.h"
 #include <stdlib.h>
 
 /*-----------------------------------------------------------

@@ -67,8 +67,8 @@
     1 tab == 4 spaces!
 */
 
-#include "croutine.h"
 #include "FreeRTOS.h"
+#include "croutine.h"
 #include "task.h"
 
 /* Remove the whole file is co-routines are not being used. */
