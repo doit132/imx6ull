@@ -70,7 +70,7 @@
  * (PLL) that is part of the microcontroller device.
  */
 
-#include "bsp_uart.h"
+#include <bsp_uart.h>
 #include "fsl_device_registers.h"
 #include <stdint.h>
 
@@ -191,6 +191,7 @@ uint32_t SystemCoreClock = DEFAULT_SYSTEM_CLOCK;
 /* ----------------------------------------------------------------------------
    -- SystemInit()
    ---------------------------------------------------------------------------- */
+#define INT_VECT_OFFSET_ADDR (0x87800000UL)
 
 void SystemInit(void)
 {
@@ -220,7 +221,7 @@ void SystemInit(void)
 
 	/* Set vector base address */
 	GIC_Init();
-	__set_VBAR((uint32_t)__VECTOR_TABLE);
+	__set_VBAR((uint32_t)INT_VECT_OFFSET_ADDR);
 
 #if ((__FPU_PRESENT == 1) && (__FPU_USED == 1))
 	cpacr = __get_CPACR();
