@@ -37,259 +37,185 @@
 /*****************************************************************************/
 /* Version: GCC for ARM Embedded Processors                                  */
 /*****************************************************************************/
-    .syntax unified
-    .arch armv7-a
+    .global _start  				/* 全局标号 */
+    .extern put
+    .extern FreeRTOS_IRQ_Handler
+    .extern FreeRTOS_SWI_Handler
+_start:
+	ldr pc, =Reset_Handler		          /* 复位中断 					    */
+	ldr pc, =Undefined_Handler	          /* 未定义中断 					*/
+    ldr pc, =FreeRTOS_SWI_Handler		  /* SVC(Supervisor)中断 		   */
+	ldr pc, =PrefAbort_Handler	          /* 预取终止中断 					*/
+	ldr pc, =DataAbort_Handler	          /* 数据终止中断 					*/
+	ldr	pc, =NotUsed_Handler	          /* 未使用中断					   */
+	ldr pc, =FreeRTOS_IRQ_Handler		  /* IRQ中断 					  */
+	ldr pc, =FIQ_Handler		          /* FIQ(快速中断)未定义中断 	     */
 
-    .section .isr_vector, "a"
-    .align 2
-    .globl __isr_vector
-__isr_vector:
-    ldr     pc, =Reset_Handler           /* Reset                  */
-    ldr     pc, =Undefined_Handler       /* Undefined instructions */
-    ldr     pc, =SVC_Handler             /* Supervisor Call        */
-    ldr     pc, =PrefAbort_Handler       /* Prefetch abort         */
-    ldr     pc, =DataAbort_Handler       /* Data abort             */
-    .word   0                            /* RESERVED               */
-    ldr     pc, =IRQ_Handler             /* IRQ interrupt          */
-    ldr     pc, =FIQ_Handler             /* FIQ interrupt          */
-
-    .size    __isr_vector, . - __isr_vector
-
-    .text
-    .arm
-
-/* Reset Handler */
-
-    .arm
-    .align 2
-    .globl   Reset_Handler
-    .weak    Reset_Handler
-    .type    Reset_Handler, %function
 Reset_Handler:
     cpsid   i               /* Mask interrupts */
 
-    /* Reset SCTlr Settings */
-    mrc     p15, 0, r0, c1, c0, 0     /* Read CP15 System Control register                  */
-    bic     r0,  r0, #(0x1 << 12)     /* Clear I bit 12 to disable I Cache                  */
-    bic     r0,  r0, #(0x1 <<  2)     /* Clear C bit  2 to disable D Cache                  */
-    bic     r0,  r0, #0x2             /* Clear A bit  1 to disable strict alignment         */
-    bic     r0,  r0, #(0x1 << 11)     /* Clear Z bit 11 to disable branch prediction        */
-    bic     r0,  r0, #0x1             /* Clear M bit  0 to disable MMU                      */
-    mcr     p15, 0, r0, c1, c0, 0     /* Write value back to CP15 System Control register   */
+    /*
+     * 关闭 I, DCache 和 MMU
+     * 采取读-改-写的方式
+     */
+    mrc     p15, 0, r0, c1, c0, 0     /* 读取 CP15 的 C1 寄存器到 R0 中       		           */
+    bic     r0,  r0, #(0x1 << 12)     /* 清除 C1 寄存器的 bit12 位(I 位)，关闭 I Cache          */
+    bic     r0,  r0, #(0x1 <<  2)     /* 清除 C1 寄存器的 bit2(C 位)，关闭 D Cache    			*/
+    bic     r0,  r0, #0x2             /* 清除 C1 寄存器的 bit1(A 位)，关闭对齐					 */
+    bic     r0,  r0, #(0x1 << 11)     /* 清除 C1 寄存器的 bit11(Z 位)，关闭分支预测			      */
+    bic     r0,  r0, #0x1             /* 清除 C1 寄存器的 bit0(M 位)，关闭 MMU				     */
+    mcr     p15, 0, r0, c1, c0, 0     /* 将 r0 寄存器中的值写入到 CP15 的 C1 寄存器中	 		   */
 
-    /* Set up stack for IRQ, System/User and Supervisor Modes */
-    cps     #0x12                /* Enter IRQ mode                */
-    ldr     sp, =__IStackTop     /* Set up IRQ handler stack      */
+    /* 设置各个模式下的栈指针，
+	 * 注意：IMX6UL的堆栈是向下增长的！
+	 * 堆栈指针地址一定要是4字节地址对齐的！！！
+	 * DDR范围:0X80000000~0X9FFFFFFF
+	 */
+	/* 进入IRQ模式 */
+    mrs r0, cpsr
+	bic r0, r0, #0x1f 	/* 将r0寄存器中的低5位清零，也就是cpsr的M0~M4 	*/
+	orr r0, r0, #0x12 	/* r0或上0x13,表示使用IRQ模式					 */
+	msr cpsr, r0		/* 将r0 的数据写入到cpsr_c中 					 */
+	ldr sp, =0x80600000	/* 设置IRQ模式下的栈首地址为0X80600000,大小为2MB   */
 
-    cps     #0x1F                /* Enter System mode             */
-    ldr     sp, =__CStackTop     /* Set up System/User Mode stack */
+	/* 进入SYS模式 */
+	mrs r0, cpsr
+	bic r0, r0, #0x1f 	/* 将r0寄存器中的低5位清零，也就是cpsr的M0~M4 	   */
+	orr r0, r0, #0x1f 	/* r0或上0x13,表示使用SYS模式					 */
+	msr cpsr, r0		/* 将r0 的数据写入到cpsr_c中 					 */
+	ldr sp, =0x80400000	/* 设置SYS模式下的栈首地址为0X80400000,大小为2MB   */
 
-    cps     #0x13                /* Enter Supervisor mode         */
-    ldr     sp, =__CStackTop     /* Set up Supervisor Mode stack  */
+	/* 进入SVC模式 */
+	mrs r0, cpsr
+	bic r0, r0, #0x1f 	/* 将r0寄存器中的低5位清零，也就是cpsr的M0~M4 	*/
+	orr r0, r0, #0x13 	/* r0或上0x13,表示使用SVC模式				  */
+	msr cpsr, r0		    /* 将r0 的数据写入到cpsr_c中              */
+	// cps     #0x13
+	ldr sp, =0X80200000	/* 设置SVC模式下的栈首地址为0X80200000,大小为2MB */
 
-#ifndef __NO_SYSTEM_INIT
-    ldr     r0,=SystemInit
+
+	// cps     #0x12                /* Enter IRQ mode                */
+    // ldr     sp, =0x80600000      /* Set up IRQ handler stack      */
+
+    // cps     #0x1F                /* Enter System mode             */
+    // ldr     sp, =0x80400000      /* Set up System/User Mode stack */
+
+    // cps     #0x13                /* Enter Supervisor mode         */
+    // ldr     sp, =0x80200000      /* Set up Supervisor Mode stack  */
+
+	ldr     r0,=SystemInit
     blx     r0
-#endif
-    cpsie   i                    /* Unmask interrupts             */
 
-/*     Loop to copy data from read only memory to RAM. The ranges
- *      of copy from/to are specified by following symbols evaluated in
- *      linker script.
- *      __etext: End of code section, i.e., begin of data sections to copy from.
- *      __data_start__/__data_end__: RAM address range that data should be
- *      copied to. Both must be aligned to 4 bytes boundary.  */
-
-    ldr    r1, =__etext
-
-/* Here are two copies of loop implemenations. First one favors code size
- * and the second one favors performance. Default uses the first one.
- * Change to "#if 0" to use the second one */
-#ifdef __STARTUP_INITIALIZE_NONCACHEDATA
-    ldr    r2, =__noncachedata_start__
-    ldr    r3, =__noncachedata_end__
-#if 1
-.LC0:
-    cmp     r2, r3
-    ittt    lt
-    ldrlt   r0, [r1], #4
-    strlt   r0, [r2], #4
-    blt    .LC0
-#else
-    subs    r3, r2
-    ble    .LC1
-.LC0:
-    subs    r3, #4
-    ldr     r0, [r1, r3]
-    str     r0, [r2, r3]
-    bgt    .LC0
-.LC1:
-#endif
-    ldr    r1,=__DATA_ROM
-#endif /* __STARTUP_INITIALIZE_NONCACHEDATA */
-
-    ldr    r2, =__data_start__
-    ldr    r3, =__data_end__
-#if 1
-.LC2:
-    cmp     r2, r3
-    ittt    lt
-    ldrlt   r0, [r1], #4
-    strlt   r0, [r2], #4
-    blt    .LC2
-#else
-    subs    r3, r2
-    ble    .LC3
-.LC2:
-    subs    r3, #4
-    ldr     r0, [r1, r3]
-    str     r0, [r2, r3]
-    bgt    .LC2
-.LC3:
+	cpsie i				/* 打开全局中断 */
+#if 0
+	/* 使能IRQ中断 */
+	mrs r0, cpsr		/* 读取cpsr寄存器值到r0中 			 */
+	bic r0, r0, #0x80	/* 将r0寄存器中bit7清零，也就是CPSR中的I位清零，表示允许IRQ中断 */
+	msr cpsr, r0		/* 将r0重新写入到cpsr中 			*/
 #endif
 
-/*     Loop to copy ocram data from read only memory to ocram. The ranges
- *      of copy from/to are specified by following symbols evaluated in
- *      linker script.
- *      __ocram_data_start__/__ocram_data_end__: OCRAM address range that data should be
- *      copied to. Both must be aligned to 4 bytes boundary.  */
+	b main				/* 跳转到main函数 			 	   */
 
-    ldr    r2, =__ocram_data_start__
-    ldr    r3, =__ocram_data_end__
 
-#if 1
-.LC4:
-    cmp     r2, r3
-    ittt    lt
-    ldrlt   r0, [r1], #4
-    strlt   r0, [r2], #4
-    blt    .LC4
-#else
-    subs    r3, r2
-    ble    .LC1
-.LC4:
-    subs    r3, #4
-    ldr     r0, [r1, r3]
-    str     r0, [r2, r3]
-    bgt    .LC4
-.LC5:
-#endif
-
-#ifdef __STARTUP_CLEAR_BSS
-/*     This part of work usually is done in C library startup code. Otherwise,
- *     define this macro to enable it in this startup.
- *
- *     Loop to zero out BSS section, which uses following symbols
- *     in linker script:
- *      __bss_start__: start of BSS section. Must align to 4
- *      __bss_end__: end of BSS section. Must align to 4
- */
-    ldr r1, =__bss_start__
-    ldr r2, =__bss_end__
-
-    movs    r0, 0
-.LC6:
-    cmp     r1, r2
-    itt     lt
-    strlt   r0, [r1], #4
-    blt    .LC6
-#endif /* __STARTUP_CLEAR_BSS */
-
-#ifndef __START
-#define __START _start
-#endif
-#ifndef __ATOLLIC__
-    ldr   r0,=__START
-    blx   r0
-#else
-    ldr   r0,=__libc_init_array
-    blx   r0
-    ldr   r0,=main
-    bx    r0
-#endif
-    .pool
-    .size Reset_Handler, . - Reset_Handler
-
-    .align  2
-    .arm
-    .weak Undefined_Handler
-    .type Undefined_Handler, %function
+/* 未定义中断 */
+.align  2
+.arm
+.weak Undefined_Handler
+.type Undefined_Handler, %function
 Undefined_Handler:
     b Undefined_Handler
     .size Undefined_Handler, . - Undefined_Handler
 
-    .align 2
-    .arm
-    .weak SVC_Handler
-    .type SVC_Handler, %function
+/* SVC 中断 */
+.align 2
+.arm
+.weak SVC_Handler
+.type SVC_Handler, %function
 SVC_Handler:
     ldr   r0,=SVC_Handler
     bx    r0
     .size SVC_Handler, . - SVC_Handler
 
-    .align 2
-    .arm
-    .weak PrefAbort_Handler
-    .type PrefAbort_Handler, %function
+/* 预取终止中断 */
+.align 2
+.arm
+.weak PrefAbort_Handler
+.type PrefAbort_Handler, %function
 PrefAbort_Handler:
     ldr   r0,=PrefAbort_Handler
     bx    r0
     .size PrefAbort_Handler, . - PrefAbort_Handler
 
-    .align 2
-    .arm
-    .weak DataAbort_Handler
-    .type DataAbort_Handler, %function
+/* 数据终止中断 */
+.align 2
+.arm
+.weak DataAbort_Handler
+.type DataAbort_Handler, %function
 DataAbort_Handler:
     ldr   r0,=DataAbort_Handler
     bx    r0
     .size DataAbort_Handler, . - DataAbort_Handler
 
-    .align 2
-    .arm
-    .weak IRQ_Handler
-    .type IRQ_Handler, %function
+/* 未使用的中断 */
+.align 2
+.arm
+.weak NotUsed_Handler
+.type NotUsed_Handler, %function
+NotUsed_Handler:
+	ldr r0, =NotUsed_Handler
+	bx r0
+
+/* IRQ中断！重点！！！！！ ，进入中断后，系统必然进入IRQ模式*/
+.align 2
+.arm
+.weak IRQ_Handler
+.type IRQ_Handler, %function
 IRQ_Handler:
-    push    {lr}                         /* Save return address+4                                */
-    push    {r0-r3, r12}                 /* Push caller save registers                           */
+    push    {lr}                         /* 保存 lr 地址 */
+    push    {r0-r3, r12}                 /* 保存 r0-r3，r12 寄存器 */
 
-    MRS     r0, spsr                     /* Save SPRS to allow interrupt reentry                 */
-    push    {r0}
+    MRS     r0, spsr                     /* 读取 spsr 寄存器 */
+    push    {r0}                         /* 保存 spsr 寄存器 */
 
-    MRC     P15, 4, r1, C15, C0, 0       /* Get GIC base address                                 */
-    ADD     r1, r1, #0x2000              /* r1: GICC base address                                */
-    LDR     r0, [r1, #0xC]               /* r0: IAR                                              */
+    MRC     P15, 4, r1, C15, C0, 0       /* 从 CP15 的 C0 寄存器内的值到 R1 寄存器中
+								          * 参考文档 ARM Cortex-A(armV7)编程手册 V4.0.pdf P49
+								          * Cortex-A7 Technical ReferenceManua.pdf P68 P138
+								          */
+    ADD     r1, r1, #0x2000              /* GIC 基地址加 0X2000，也就是 GIC 的 CPU 接口端基地址 */
+    LDR     r0, [r1, #0xC]               /* GIC 的 CPU 接口端基地址加 0X0C 就是 GICC_IAR 寄存器，
+								          * GICC_IAR 寄存器保存这当前发生中断的中断号，我们要根据
+								          * 这个中断号来绝对调用哪个中断服务函数
+								          */
 
-    push    {r0, r1}
+    push    {r0, r1}                     /* 保存 r0, r1 */
 
-    CPS     #0x13                        /* Change to Supervisor mode to allow interrupt reentry */
+    CPS     #0x13                        /* 进入 SVC 模式，允许其他中断再次进去 */
 
-    push    {lr}                         /* Save Supervisor lr                                   */
-    LDR     r2, =SystemIrqHandler
-    BLX     r2                           /* Call SystemIrqHandler with param GCC                 */
-    POP     {lr}
+    push    {lr}                         /* 保存 SVC 模式的 lr 寄存器 */
+    LDR     r2, =SystemIrqHandler        /* 加载 C 语言中断处理函数到 r2 寄存器中，汇编传参，参数少于三个的时候，参数保存在 r0*/
+    BLX     r2                           /* 运行 C 语言中断处理函数，带有一个参数，保存在 R0 寄存器中 */
+    POP     {lr}             /* 执行完 C 语言中断服务函数，lr 出栈 */
 
-    CPS     #0x12                        /* Back to IRQ mode                                     */
+    CPS     #0x12            /* 进入IRQ模式 */
 
     POP     {r0, r1}
 
-    STR     r0, [r1, #0x10]              /* Now IRQ handler finished: write to EOIR              */
+    STR     r0, [r1, #0x10]  /* 中断执行完成，写 EOIR */
 
     POP     {r0}
-    MSR     spsr_cxsf, r0
+    MSR     spsr_cxsf, r0    /* 恢复spsr */
 
-    POP     {r0-r3, r12}
-    POP     {lr}
-    SUBS    pc, lr, #4
+    POP     {r0-r3, r12}     /* r0-r3,r12出栈 */
+    POP     {lr}             /* lr出栈 */
+    SUBS    pc, lr, #4       /* 将lr-4赋给pc */
     .size IRQ_Handler, . - IRQ_Handler
 
-    .align 2
-    .arm
-    .weak FIQ_Handler
-    .type FIQ_Handler, %function
+# FIQ 中断
+.align 2
+.arm
+.weak FIQ_Handler
+.type FIQ_Handler, %function
 FIQ_Handler:
     ldr   r0,=FIQ_Handler
     bx    r0
     .size FIQ_Handler, . - FIQ_Handler
-
-    .end
