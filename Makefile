@@ -42,7 +42,7 @@ INCFLAGS := $(patsubst %, -I %, $(INCDIRS))
 
 # 编译选项
 CFLAGS := -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89
-CFLAGS += -fexec-charset=gbk
+CFLAGS += -fexec-charset=gbk -nostdlib -fno-builtin -mfpu=neon-vfpv4
 CFLAGS += $(INCFLAGS)
 
 # 链接选项
