@@ -174,8 +174,8 @@ typedef struct xTASK_STATUS {
 					  inherited) when the structure was populated. */
 	UBaseType_t uxBasePriority;    /* The priority to which the task will return if the task's
 					  current priority has    been inherited to avoid unbounded
-					  priority inversion when obtaining a mutex.    Only    valid if
-					  configUSE_MUTEXES is defined as 1 in FreeRTOSConfig.h. */
+					  priority inversion when obtaining a mutex.    Only    valid
+					  if    configUSE_MUTEXES is defined as 1 in FreeRTOSConfig.h. */
 	uint32_t ulRunTimeCounter; /* The total run time allocated to the task so far, as defined by
 				      the run time stats clock.  See
 				      http://www.freertos.org/rtos-run-time-stats.html.  Only valid
@@ -190,11 +190,11 @@ typedef struct xTASK_STATUS {
 
 /* Possible return values for eTaskConfirmSleepModeStatus(). */
 typedef enum {
-	eAbortSleep =
-		0,	/* A task has been made ready or a context switch pended since
-			   portSUPPORESS_TICKS_AND_SLEEP()      was called - abort entering a sleep mode. */
-	eStandardSleep, /* Enter a sleep mode that will not last any longer than the expected idle
-			   time. */
+	eAbortSleep = 0, /* A task has been made ready or a context switch pended since
+			    portSUPPORESS_TICKS_AND_SLEEP()      was called - abort entering a sleep
+			    mode. */
+	eStandardSleep,	 /* Enter a sleep mode that will not last any longer than the expected idle
+			    time. */
 	eNoTasksWaitingTimeout /* No tasks are waiting for a timeout so it is safe to enter a sleep
 				  mode that can only be exited by an external interrupt. */
 } eSleepModeStatus;
