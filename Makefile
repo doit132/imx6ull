@@ -2,6 +2,8 @@ PHONY := clean
 
 # 路径
 objtree		:= .
+TOPDIR := $(shell pwd)
+export TOPDIR
 
 # 交叉编译工具链设置
 ARCH  ?= arm
@@ -26,18 +28,27 @@ OBJDUMP = $(CROSS_COMPILE)objdump
 export AS LD CC CPP AR NM
 export STRIP OBJCOPY OBJDUMP
 
+
+# 头文件搜索路径
+INCDIRS := $(TOPDIR)/project  		\
+           $(TOPDIR)/imx6ull  		\
+	   $(TOPDIR)/bsp      		\
+	   $(TOPDIR)/bsp/uart           \
+	   $(TOPDIR)/freertos/include   \
+	   $(TOPDIR)/freertos/portable/GCC/ARM_CA9 \
+
+# 函数的作用是将 INCDIRS 变量中的每个元素（目录名）前面加上 -I，以构建用于指定头文件搜索路径的参数
+INCFLAGS := $(patsubst %, -I %, $(INCDIRS))
+
 # 编译选项
 CFLAGS := -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89
 CFLAGS += -fexec-charset=gbk
-CFLAGS += -I $(shell pwd)/include
+CFLAGS += $(INCFLAGS)
 
 # 链接选项
 LDFLAGS := -T./project/imx6ull.ld
 
 export CFLAGS LDFLAGS
-
-TOPDIR := $(shell pwd)
-export TOPDIR
 
 # 被编译的当前目录下的文件
 obj-y +=
@@ -46,6 +57,7 @@ obj-y +=
 obj-y += imx6ull/
 obj-y += project/
 obj-y += bsp/
+obj-y += freertos/
 
 # 编译目标文件的名称
 TARGET := test.bin
