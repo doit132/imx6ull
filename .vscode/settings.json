@@ -12,6 +12,7 @@
         "bsp_delay.h": "c",
         "bsp_uart.h": "c",
         "fsl_common.h": "c",
-        "fsl_device_registers.h": "c"
+        "fsl_device_registers.h": "c",
+        "portmacro.h": "c"
     }
 }
