@@ -7,5 +7,7 @@ C_FILES := $(basename $(wildcard *.c))
 # 添加 .o 后缀
 O_FILES := $(addsuffix .o,$(C_FILES))
 
-obj-y += portable/
+obj-y += portable/MemMang/
+obj-y += portable/low_power_tickless/
+obj-y += portable/GCC/ARM_CA9/
 obj-y += $(O_FILES)

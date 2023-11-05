@@ -30,19 +30,19 @@ export STRIP OBJCOPY OBJDUMP
 
 
 # 头文件搜索路径
-INCDIRS := $(TOPDIR)/project  		\
-           $(TOPDIR)/imx6ull  		\
-	   $(TOPDIR)/bsp      		\
-	   $(TOPDIR)/bsp/uart           \
-	   $(TOPDIR)/freertos/include   \
-	   $(TOPDIR)/freertos/portable/GCC/ARM_CA9 \
+INCDIRS :=  $(TOPDIR)/project  		\
+            $(TOPDIR)/imx6ull  		\
+	   		$(TOPDIR)/bsp      		\
+	   		$(TOPDIR)/bsp/uart           \
+	   		$(TOPDIR)/freertos/include   \
+	   		$(TOPDIR)/freertos/portable/GCC/ARM_CA9 \
 
 # 函数的作用是将 INCDIRS 变量中的每个元素（目录名）前面加上 -I，以构建用于指定头文件搜索路径的参数
 INCFLAGS := $(patsubst %, -I %, $(INCDIRS))
 
 # 编译选项
 CFLAGS := -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89
-CFLAGS += -fexec-charset=gbk -nostdlib -fno-builtin -mfpu=neon-vfpv4
+CFLAGS += -fexec-charset=gbk -nostdlib -fno-builtin 
 CFLAGS += $(INCFLAGS)
 
 # 链接选项
@@ -56,7 +56,7 @@ obj-y +=
 # 被编译的子目录
 obj-y += imx6ull/
 obj-y += project/
-obj-y += bsp/
+obj-y += bsp/uart/
 obj-y += freertos/
 
 # 编译目标文件的名称
